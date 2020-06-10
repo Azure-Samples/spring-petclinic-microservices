@@ -363,7 +363,7 @@ to take the following steps:
 1. Add the DB secrets to the KeyVault
 1. Create a managed identity for your Spring Boot application on Azure Spring Cloud.
 1. Add an access policy to Azure KeyVault to allow the managed identity access.
-1. Redploy the microservice with the `keyvault` profile (see below).
+1. Redploy the microservice with the `keyvault` profile (see below for an example).
 
 ```bash
 
