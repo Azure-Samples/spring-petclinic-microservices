@@ -292,6 +292,24 @@ Navigate to the URL provided by the previous command to open the Pet Clinic micr
     
 ![](./media/petclinic.jpg)
 
+## Reconfigure the microservices to use Azure KeyVault to get the database configuration
+
+If you want to use Azure KeyVault to get the database configuration you need
+to take the following steps:
+
+1. Create an Azure KeyVault
+1. Add the DB secrets to the KeyVault
+1. Create a managed identity for your Spring Boot application on Azure Spring Cloud.
+1. Add an access policy to Azure KeyVault to allow the managed identity access.
+
+```bash
+
+  az spring-cloud app deploy --name ${VISITS_SERVICE} \
+        --jar-path ${VISITS_SERVICE_JAR} \
+        --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=keyvault' \
+        --env AZURE_KEY_VAULT_URI=URI_TO_YOUR_KEYVAULT
+```
+
 ## Next Steps
 
 In this quickstart, you've deployed an existing Spring microservices app using Azure CLI. To learn more about Azure Spring Cloud, go to:
