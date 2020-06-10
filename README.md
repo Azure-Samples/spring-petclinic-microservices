@@ -7,6 +7,9 @@ products:
 description: "Deploy Spring microservices using Azure Spring Cloud and MySQL"
 urlFragment: "spring-petclinic-microservices"
 ---
+
+![Deploy to Azure Spring Cloud with Key Vault](https://github.com/Azure-Samples/spring-petclinic-microservices/workflows/Deploy%20to%20Azure%20Spring%20Cloud%20with%20Key%20Vault/badge.svg)
+
 # Deploy Spring Microservices using Azure Spring Cloud and MySQL 
 
 Azure Spring Cloud enables you to easily run a Spring Boot based microservices application on Azure.
@@ -16,7 +19,7 @@ This quickstart shows you how to deploy an existing Java Spring Cloud applicatio
 ## What will you experience
 You will:
 - Build existing Spring microservices applications
-- Provision an Azure Spring Cloud service instance
+- Provision an Azure Spring Cloud service instance. If you prefer Terraform, you may also provision using Terraform, see [`README-terraform`](./terraform/README-terraform.md)
 - Deploy applications to Azure
 - Bind applications to Azure Database for MySQL
 - Open the application
@@ -292,6 +295,65 @@ Navigate to the URL provided by the previous command to open the Pet Clinic micr
     
 ![](./media/petclinic.jpg)
 
+## Automate Deployments using GitHub Actions
+
+### Prepare secrets in your Key Vault
+If you do not have a Key Vault yet, run the following commands to provision a Key Vault:
+```bash
+    export KEY_VAULT=your-keyvault-name # customize this
+    az keyvault create --name ${KEY_VAULT} -g ${RESOURCE_GROUP}
+```
+
+Add the MySQL secrets to your Key Vault:
+```bash
+    az keyvault secret set --vault-name ${KEY_VAULT} --name "MYSQL-DATABASE-NAME" --value ${MYSQL_DATABASE_NAME}
+    az keyvault secret set --vault-name ${KEY_VAULT} --name "MYSQL-SERVER-ADMIN-LOGIN-NAME" --value ${MYSQL_SERVER_ADMIN_LOGIN_NAME}
+    az keyvault secret set --vault-name ${KEY_VAULT} --name "MYSQL-SERVER-ADMIN-PASSWORD" --value ${MYSQL_SERVER_ADMIN_PASSWORD}
+    az keyvault secret set --vault-name ${KEY_VAULT} --name "MYSQL-SERVER-FULL-NAME" --value ${MYSQL_SERVER_FULL_NAME}
+```
+
+Create a service principal with enough scope/role to manage your Azure Spring Cloud instance:
+```bash
+    az ad sp create-for-rbac --role contributor --scopes /subscriptions/<SUBSCRIPTION_ID> --sdk-auth
+```
+With results:
+```json
+    {
+        "clientId": "<GUID>",
+        "clientSecret": "<GUID>",
+        "subscriptionId": "<GUID>",
+        "tenantId": "<GUID>",
+        "activeDirectoryEndpointUrl": "https://login.microsoftonline.com",
+        "resourceManagerEndpointUrl": "https://management.azure.com/",
+        "sqlManagementEndpointUrl": "https://management.core.windows.net:8443/",
+        "galleryEndpointUrl": "https://gallery.azure.com/",
+        "managementEndpointUrl": "https://management.core.windows.net/"
+    }
+```
+Add them as secrets to your Key Vault:
+```bash
+    az keyvault secret set --vault-name ${KEY_VAULT} --name "AZURE-CREDENTIALS-FOR-SPRING" --value "<results above>"
+```
+
+### Grant Access to Key Vault with Service Principal
+To generate a key to access the Key Vault, execute command below:
+```bash
+    az ad sp create-for-rbac --role contributor --scopes /subscriptions/<SUBSCRIPTION_ID>/resourceGroups/<RESOURCE_GROUP>/providers/Microsoft.KeyVault/vaults/<KEY_VAULT> --sdk-auth
+```
+Then, follow [the steps here](https://docs.microsoft.com/azure/spring-cloud/spring-cloud-github-actions-key-vault#add-access-policies-for-the-credential) to add access policy for the Service Principal.
+
+In the end, add this service principal as secrets named "AZURE_CREDENTIALS" in your forked GitHub repo following [the steps here](https://docs.microsoft.com/en-us/azure/spring-cloud/spring-cloud-github-actions-key-vault#add-access-policies-for-the-credential).
+
+### Customize your workflow
+Finally, edit the workfolw file `.github/workflows/action.yml` in your forked repo to fill in the names of resource group and the Azure Spring Cloud instance name that you just created:
+```yml
+    env:
+      RESOURCE_GROUP: resource-group-name # customize this
+      SPRING_CLOUD_SERVICE: azure-spring-cloud-name # customize this
+```
+After you commited this change, you will see GitHub Actions triggered to build and deploy all the apps in the repo to your Azure Spring Cloud instance.
+![](./media/automate-deployments-using-github-actions.jpg)
+
 ## Reconfigure the microservices to use Azure KeyVault to get the database configuration
 
 If you want to use Azure KeyVault to get the database configuration you need
@@ -312,7 +374,7 @@ to take the following steps:
 
 ## Next Steps
 
-In this quickstart, you've deployed an existing Spring microservices app using Azure CLI. To learn more about Azure Spring Cloud, go to:
+In this quickstart, you've deployed an existing Spring microservices app using Azure CLI, Terraform and GitHub Actions. To learn more about Azure Spring Cloud, go to:
 
 - [Azure Spring Cloud](https://azure.microsoft.com/en-us/services/spring-cloud/)
 - [Azure Spring Cloud docs](https://docs.microsoft.com/en-us/azure/java/)
