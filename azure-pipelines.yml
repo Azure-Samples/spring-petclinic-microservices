@@ -1,0 +1,60 @@
+# A pipeline to build a mono-repo of Spring Cloud microservice.
+# Includes the user of a secure `settings.xml` file to enable Azure Artifacts,
+# and downloading of secrets from Azure KeyVault.
+
+# https://aka.ms/yaml
+
+name: Build on Azure Pipelines
+
+trigger:
+  branches:
+    include:
+    - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  
+- task: DownloadSecureFile@1
+  name: settings_xml
+  displayName: 'Download Maven Settings'
+  inputs:
+    secureFile: 'settings.xml'
+
+- task: Bash@3
+  name: copy_maven_settings
+  displayName: Transferring Maven settings to repository root
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo 'Copying $(settings_xml.secureFilePath)'
+      mkdir ~/.m2
+      cp -v -f $(settings_xml.secureFilePath) ~/.m2
+      echo Build Number: '$(Build.BuildId)'
+
+- task: Maven@3
+  inputs:
+    options: -Denv=cloud
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+
+- task: CopyFiles@2
+  name: copyjars
+  displayName: Copy built artifacts to staging directory
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: '**/target/*.jar'
+    flattenFolders: true
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'build'
+    publishLocation: 'Container'
