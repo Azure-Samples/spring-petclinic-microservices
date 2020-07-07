@@ -1,0 +1,108 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: Provision Resources
+
+variables:
+- group: azure-environment
+
+parameters:
+- name: location
+  default: westus2
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- task: AzureCLI@2
+  name: deploy_arm_template
+  displayName: Deploy ARM Template
+  inputs:
+    azureSubscription: '$(SERVICE_CONNECTION_NAME)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |
+      echo "Deploying to resource group $(RESOURCE_GROUP)"
+      az group create -g "$(RESOURCE_GROUP)" -l ${{ parameters.location }}
+      az group deployment create -g $(RESOURCE_GROUP) --template-file azuredeploy.json --parameters 'administratorLoginPassword=$(MYSQL_PASSWORD)' 'spring_cloud_name=$(SPRING_CLOUD_NAME)' --verbose
+      chmod +x *.sh
+      echo "Deployment complete..."
+
+- task: AzureCLI@2
+  name: configure_mysql
+  displayName: Configure MySQL
+  inputs:
+    azureSubscription: '$(SERVICE_CONNECTION_NAME)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |  
+      # Populate MySQL Variables
+      MYSQL_INFO=$(az mysql server list -g ${RESOURCE_GROUP} --query '[0]')
+      MYSQL_SERVER_NAME=$(echo $MYSQL_INFO | jq -r .name)
+      MYSQL_USERNAME="$(echo $MYSQL_INFO | jq -r .administratorLogin)@${MYSQL_SERVER_NAME}"
+      MYSQL_HOST="$(echo $MYSQL_INFO | jq -r .fullyQualifiedDomainName)"
+      echo "##vso[task.setvariable variable=MYSQL_SERVER_NAME]${MYSQL_SERVER_NAME}"
+      echo "##vso[task.setvariable variable=MYSQL_USERNAME]${MYSQL_USERNAME}"
+      echo "##vso[task.setvariable variable=MYSQL_HOST]${MYSQL_HOST}"
+      # allow access from Azure resources
+      az mysql server firewall-rule create --name allAzureIPs \
+          -g ${RESOURCE_GROUP} \
+          --server ${MYSQL_SERVER_NAME} \
+          --resource-group ${RESOURCE_GROUP} \
+          --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+      # increase connection timeout
+      az mysql server configuration set --name wait_timeout \
+          -g ${RESOURCE_GROUP} \
+          --resource-group ${RESOURCE_GROUP} \
+          --server ${MYSQL_SERVER_NAME} --value 2147483
+      # Wait for all provisioning to complete
+      echo Waiting 90 seconds to ensure all behind-the-scenes provisioning completes...
+      sleep 90s          
+
+
+- task: AzureMysqlDeployment@1
+  name: db_init_script
+  displayName: Run DB Init Script
+  inputs:
+    azureSubscription: '$(SERVICE_CONNECTION_NAME)'
+    ServerName: '$(MYSQL_HOST)'
+    SqlUsername: '$(MYSQL_USERNAME)'
+    SqlPassword: '$(MYSQL_PASSWORD)'
+    TaskNameSelector: 'SqlTaskFile'
+    SqlFile: 'setup-database.sql'
+    IpDetectionMethod: 'AutoDetect'
+    DeleteFirewallRule: true 
+
+- task: AzureCLI@2
+  name: post_init_mysql_config
+  displayName: Configure MySQL Post-Init
+  inputs:
+    azureSubscription: '$(SERVICE_CONNECTION_NAME)'
+    scriptType: 'bash'
+    scriptLocation: 'inlineScript'
+    inlineScript: |  
+      # Set Time Zone
+      az mysql server configuration set --name time_zone \
+          -g ${RESOURCE_GROUP} \
+          --resource-group ${RESOURCE_GROUP} \
+          --server ${MYSQL_SERVER_NAME} --value "US/Pacific"
+
+- task: AzureCLI@2
+  name: configure_azure_spring_cloud
+  displayName: Configure Azure Spring Cloud
+  inputs:
+    azureSubscription: '$(SERVICE_CONNECTION_NAME)'
+    scriptType: 'bash'
+    scriptLocation: 'scriptPath'
+    scriptPath: 'setup-azure-spring-cloud.sh'

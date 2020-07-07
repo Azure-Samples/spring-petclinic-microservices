@@ -1,0 +1,112 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "administratorLogin": {
+            "type": "string",
+            "defaultValue": "sqlAdmin"
+        },
+        "administratorLoginPassword": {
+            "type": "securestring"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[resourceGroup().location]"
+        },
+        "mysqlServerName": {
+            "type": "string",
+            "defaultValue": "[concat('pcsms-db', uniqueString(resourceGroup().id))]"
+        },
+        "app_insights_workspace_name": {
+            "defaultValue": "[concat('pcsms-ai-', uniqueString(resourceGroup().id))]",
+            "type": "string"
+        },
+        "log_analytics_workspace_name": {
+            "defaultValue": "[concat('pcsms-la-', uniqueString(resourceGroup().id))]",
+            "type": "string"
+        },
+        "spring_cloud_name": {
+            "type": "string",
+            "defaultValue": "[concat('pcsms-sc-', uniqueString(resourceGroup().id))]"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.DBforMySQL/servers",
+            "apiVersion": "2017-12-01-preview",
+            "kind": "",
+            "location": "[parameters('location')]",
+            "name": "[parameters('mysqlServerName')]",
+            "properties": {
+                "version": "5.7",
+                "administratorLogin": "[parameters('administratorLogin')]",
+                "administratorLoginPassword": "[parameters('administratorLoginPassword')]",
+                "storageProfile": {
+                    "storageMB": 51200,
+                    "backupRetentionDays": 7,
+                    "geoRedundantBackup": "Disabled",
+                    "storageAutoGrow": "Disabled"
+                }
+            },
+            "sku": {
+                "name": "B_Gen5_2",
+                "tier": "Basic",
+                "capacity": 2,
+                "size": "51200",
+                "family": "Gen5"
+            }
+
+        },
+        {
+            "type": "Microsoft.OperationalInsights/workspaces",
+            "apiVersion": "2015-11-01-preview",
+            "name": "[parameters('log_analytics_workspace_name')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "sku": {
+                    "name": "PerGB2018"
+                },
+                "retentionInDays": 30
+            }
+        },
+        {
+            "type": "Microsoft.Insights/components",
+            "apiVersion": "2015-05-01",
+            "name": "[parameters('app_insights_workspace_name')]",
+            "location": "[parameters('location')]",
+            "kind": "web",
+            "properties": {
+                "Application_Type": "web",
+                "Flow_Type": "Bluefield",
+                "Request_Source": "rest"
+            }
+        },
+        {
+            "type": "Microsoft.AppPlatform/Spring",
+            "apiVersion": "2019-05-01-preview",
+            "name": "[parameters('spring_cloud_name')]",
+            "location": "westus2",
+            "sku": {
+                "name": "S0",
+                "tier": "Standard"
+            },
+            "properties": {
+                "configServerProperties": {
+                    "configServer": {
+                        "gitProperty": {
+                            "repositories": [],
+                            "uri": "https://github.com/selvasingh/spring-petclinic-microservices-config",
+                            "searchPaths": [
+                            ]
+                        }
+                    }
+                },
+                "trace": {
+                    "enabled": false
+                }
+            }
+        }
+    ],
+    "variables": {
+    }
+}
