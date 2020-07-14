@@ -1,0 +1,78 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+name: Provision Resources
+
+variables:
+- group: azure-environment-terraform
+
+parameters:
+- name: location
+  default: westus2
+
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    exclude:
+    - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- task: GoTool@0
+  inputs:
+    version: '1.14.4'
+    goPath: '/gopath'
+    goBin: '/gopath/bin'
+
+
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo Write your commands here
+      echo Cloning the Azurerm Provider with vnet support 
+            
+            sudo mkdir -p terraform
+            sudo chmod +rwx terraform
+            cd terraform
+            sudo git clone --single-branch -b spring_cloud_service_vnet_integration https://github.com/njuCZ/terraform-provider-azurerm.git
+            cd  terraform-provider-azurerm
+            sudo chmod +rwx /opt/hostedtoolcache/go/1.14.4/x64/bin/go
+            sudo make build
+            cd ../..
+            sudo cp ~/go/bin/terraform-provider-azurerm .
+
+                    
+- task: TerraformTaskV1@0
+  inputs:
+    provider: 'azurerm'
+    command: 'init'
+    backendServiceArm: '$(SERVICE_CONNECTION_NAME)'
+    backendAzureRmResourceGroupName: '$(REMOTE_BACKEND_RESOURCE_GROUP)'
+    backendAzureRmStorageAccountName: '$(REMOTE_BACKEND_STORAGE_ACCOUNT)'
+    backendAzureRmContainerName: '$(REMOTE_BACKEND_CONTAINER_NAME)'
+    backendAzureRmKey: '$(REMOTE_BACKEND_STORAGE_KEY)'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    failOnStderr: false
+    script: |
+      # Write your commands here
+       echo Checking the terraform version
+       terraform -v            
+
+- task: TerraformTaskV1@0
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    commandOptions: '-auto-approve -var resource_group=$(RESOURCE_GROUP) -var spring_cloud_service=$(SPRING_CLOUD_NAME) -var mysql_server_admin_password=$(MYSQL_PASSWORD)'
+    environmentServiceNameAzureRM: 'Java Petclinic Subscription'
+
