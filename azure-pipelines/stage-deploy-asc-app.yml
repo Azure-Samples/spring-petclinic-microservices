@@ -9,13 +9,19 @@ parameters:
 - name: resource_group
   default: $(RESOURCE_GROUP)
 - name: application_name
-  default: $(application.name)
+- name: service_connection_name
+  default: $(SERVICE_CONNECTION_NAME)
   
 trigger: none
 
 pool:
   vmImage: 'ubuntu-20.04'
 
+resources:
+  pipelines:
+  - pipeline: build_from_github
+    source: Build from GitHub
+    trigger: none
 
 stages: 
 - stage: deploy_staging
@@ -24,32 +30,24 @@ stages:
   - job: deploy_staging
     displayName: Staging Deployment
     steps:
-    - task: DownloadBuildArtifacts@0
-      inputs:
-        buildType: 'specific'
-        project: $(System.TeamProjectId)
-        pipeline: $(Build.TriggeredBy.DefinitionId)
-        buildVersionToDownload: 'latest'
-        downloadType: 'single'
-        downloadPath: '$(System.ArtifactsDirectory)'
-        artifactName: build
-
+    - download: build_from_github
+      artifact: build
+        
     - task: AzureCLI@2
       name: deploy_to_staging
       displayName: Staging Deployment
       inputs:
-        azureSubscription: '$(SERVICE_CONNECTION_NAME)'
+        azureSubscription: ${{parameters.service_connection_name}}
         scriptType: 'pscore'
         scriptLocation: 'inlineScript'
         inlineScript: |
           az extension add -n spring-cloud -y
 
-
           Write-Host "Removing inactive deployments..."
           $inactiveDeployments =  az spring-cloud app deployment list  -s '${{parameters.spring_cloud_name}}' -g '${{parameters.resource_group}}' --app '${{parameters.application_name}}' | ConvertFrom-Json |  Where-Object { !$_.properties.active} | Select -Expand name
           $inactiveDeployments | %{  az spring-cloud app deployment delete -s '${{parameters.spring_cloud_name}}' -g '${{parameters.resource_group}}' --app '${{parameters.application_name}}'  -n $_ --verbose }
 
-          $jarPath=(dir $(System.ArtifactsDirectory)/build/*${{parameters.application_name}}*.jar | select -Expand FullName)
+          $jarPath=(dir $(PIPELINE.WORKSPACE)/build_from_github/build/*${{parameters.application_name}}*.jar | select -Expand FullName)
           echo 'Deploying ${jarPath}... as ${{parameters.application_name}}'
           echo 'Creating deployment d$(Build.BuildId)...'
 
@@ -65,7 +63,7 @@ stages:
       name: move_to_production
       displayName: Staging Deployment
       inputs:
-        azureSubscription: '$(SERVICE_CONNECTION_NAME)'
+        azureSubscription: ${{parameters.service_connection_name}}
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
