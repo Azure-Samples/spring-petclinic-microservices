@@ -1,0 +1,21 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                              https://maven.apache.org/xsd/settings-1.0.0.xsd">
+
+<!-- This is a modified sample of a settings.xml file used to configure the Maven Build to use Azure Artifacts.
+The actual file is stored as a Secret File in the project and downloaded inside the build pipeline. -->
+  <servers>
+    <server>
+      <id>spring-cloud-pipeline</id>
+      <username>myusername</username>
+      <password>nottherealpassword</password>
+    </server>
+  </servers>
+  <mirrors>
+    <mirror>
+      <id>spring-cloud-pipeline</id>
+      <mirrorOf>*</mirrorOf>
+      <url>https://pkgs.dev.azure.com/<organization_name>>/<project_name>/_packaging/<feed_name>/maven/v1</url>
+      <name>Azure Artifacts</name>
+    </mirror>
+  </mirrors>
+</settings>

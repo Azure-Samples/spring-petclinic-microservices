@@ -21,6 +21,9 @@ az configure --defaults \
     group=${RESOURCE_GROUP} \
     spring-cloud=${SPRING_CLOUD_NAME}
 
+az spring-cloud config-server set \
+    --config-file application.yml \
+    --name ${SPRING_CLOUD_NAME} -g "${RESOURCE_GROUP}" 
 
 az spring-cloud app create --name ${API_GATEWAY} --instance-count 1 --is-public true \
     --memory 2 -g "${RESOURCE_GROUP}"  -s "${SPRING_CLOUD_NAME}" \

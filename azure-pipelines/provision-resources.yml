@@ -35,7 +35,7 @@ steps:
     inlineScript: |
       echo "Deploying to resource group $(RESOURCE_GROUP)"
       az group create -g "$(RESOURCE_GROUP)" -l ${{ parameters.location }}
-      az group deployment create -g $(RESOURCE_GROUP) --template-file azuredeploy.json --parameters 'administratorLoginPassword=$(MYSQL_PASSWORD)' 'spring_cloud_name=$(SPRING_CLOUD_NAME)' --verbose
+      az group deployment create -g $(RESOURCE_GROUP) --template-file azure-pipelines/azuredeploy.json --parameters 'administratorLoginPassword=$(MYSQL_PASSWORD)' 'spring_cloud_name=$(SPRING_CLOUD_NAME)' --verbose
       chmod +x *.sh
       echo "Deployment complete..."
 
@@ -80,7 +80,7 @@ steps:
     SqlUsername: '$(MYSQL_USERNAME)'
     SqlPassword: '$(MYSQL_PASSWORD)'
     TaskNameSelector: 'SqlTaskFile'
-    SqlFile: 'setup-database.sql'
+    SqlFile: 'azure-pipelines/setup-database.sql'
     IpDetectionMethod: 'AutoDetect'
     DeleteFirewallRule: true 
 
@@ -105,4 +105,4 @@ steps:
     azureSubscription: '$(SERVICE_CONNECTION_NAME)'
     scriptType: 'bash'
     scriptLocation: 'scriptPath'
-    scriptPath: 'setup-azure-spring-cloud.sh'
+    scriptPath: 'azure-pipelines/setup-azure-spring-cloud.sh'
