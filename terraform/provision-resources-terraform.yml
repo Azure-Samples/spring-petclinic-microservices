@@ -23,6 +23,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
+    workingDirectory: $(Build.Repository.LocalPath)/terraform
     backendServiceArm: '$(SERVICE_CONNECTION_NAME)'
     backendAzureRmResourceGroupName: '$(REMOTE_BACKEND_RESOURCE_GROUP)'
     backendAzureRmStorageAccountName: '$(REMOTE_BACKEND_STORAGE_ACCOUNT)'
@@ -35,4 +36,4 @@ steps:
     command: 'apply'
     commandOptions: '-auto-approve -var resource_group=$(RESOURCE_GROUP) -var spring_cloud_service=$(SPRING_CLOUD_NAME) -var mysql_server_admin_password=$(MYSQL_PASSWORD)'
     environmentServiceNameAzureRM: '$(SERVICE_CONNECTION_NAME)'
-
+    workingDirectory: $(Build.Repository.LocalPath)/terraform
