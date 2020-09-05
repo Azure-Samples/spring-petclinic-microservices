@@ -6,7 +6,11 @@ variable "resource_group" {
     type = string
 }
 variable "region" {
-    type = string
+  type    = string
+  default = "West US 2"
+}
+variable "spring_cloud_service" {
+  type    = string
 }
 variable "api_gateway" {
   type    = string
@@ -32,14 +36,17 @@ variable "mysql_server_admin_name" {
   type    = string
   default = "sqlAdmin"
 }
+
+variable "mysql_server_admin_name" {
+  type    = string
+  default = "sqlAdmin"
+}
 variable "mysql_server_admin_password" {
-    type = string
+  type    = string
 }
 variable "mysql_database_name" {
-    type = string
-}
-variable "dev_machine_ip" {
-    type = string
+  type    = string
+  default = "petclinic"
 }
 
 resource "azurerm_resource_group" "example" {
