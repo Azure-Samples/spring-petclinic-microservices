@@ -136,14 +136,6 @@ resource "azurerm_mysql_firewall_rule" "allazureips" {
 }
 
 
-resource "azurerm_mysql_firewall_rule" "devMachine" {
-  name                = "devMachine"
-  resource_group_name = azurerm_resource_group.example.name
-  server_name         = azurerm_mysql_server.example.name
-  start_ip_address    = var.dev_machine_ip
-  end_ip_address      = var.dev_machine_ip
-}
-
 resource "azurerm_mysql_configuration" "example" {
   name                = "interactive_timeout"
   resource_group_name = azurerm_resource_group.example.name
