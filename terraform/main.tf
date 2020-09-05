@@ -36,11 +36,6 @@ variable "mysql_server_admin_name" {
   type    = string
   default = "sqlAdmin"
 }
-
-variable "mysql_server_admin_name" {
-  type    = string
-  default = "sqlAdmin"
-}
 variable "mysql_server_admin_password" {
   type    = string
 }
