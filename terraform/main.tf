@@ -8,29 +8,29 @@ variable "resource_group" {
 variable "region" {
     type = string
 }
-variable "spring_cloud_service" {
-    type = string
-}
 variable "api_gateway" {
-    type = string
+  type    = string
+  default = "api-gateway"
 }
 variable "admin_server" {
-    type = string
+  type    = string
+  default = "admin-server"
 }
 variable "customers_service" {
-    type = string
+  type    = string
+  default = "customers-service"
 }
 variable "visits_service" {
-    type = string
+  type    = string
+  default = "visits-service"
 }
 variable "vets_service" {
-    type = string
-}
-variable "mysql_server_name" {
-    type = string
+  type    = string
+  default = "vets-service"
 }
 variable "mysql_server_admin_name" {
-    type = string
+  type    = string
+  default = "sqlAdmin"
 }
 variable "mysql_server_admin_password" {
     type = string
