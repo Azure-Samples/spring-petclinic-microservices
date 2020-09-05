@@ -43,6 +43,10 @@ variable "mysql_database_name" {
   type    = string
   default = "petclinic"
 }
+locals {
+  mysql_server_name  = "pcsms-db-${var.resource_group}"
+}
+
 
 resource "azurerm_resource_group" "example" {
   name     = var.resource_group
@@ -99,7 +103,7 @@ resource "azurerm_spring_cloud_app" "visits_service" {
 
 
 resource "azurerm_mysql_server" "example" {
-  name                = var.mysql_server_name
+  name                = local.mysql_server_name
   location            = azurerm_resource_group.example.location
   resource_group_name = azurerm_resource_group.example.name
 
