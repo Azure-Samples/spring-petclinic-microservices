@@ -19,3 +19,7 @@ generated/
 
 # Skip scripts
 .scripts/
+
+# terraform
+.terraform/
+terraform.tfstate
