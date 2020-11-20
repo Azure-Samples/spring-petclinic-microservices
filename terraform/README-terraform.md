@@ -181,7 +181,7 @@ Deploy microservice applications to Azure.
 
     az spring-cloud app set-deployment -d ${API_GATEWAY} -n ${API_GATEWAY} -s ${SPRING_CLOUD_SERVICE} -g ${RESOURCE_GROUP}
 
-    az spring-cloud app update --name ${API_GATEWAY} --is-public true
+    az spring-cloud app update --name ${API_GATEWAY} -s ${SPRING_CLOUD_SERVICE} -g ${RESOURCE_GROUP} --is-public true
 
     az spring-cloud app deployment create -n ${ADMIN_SERVER} --app ${ADMIN_SERVER} -s ${SPRING_CLOUD_SERVICE} -g ${RESOURCE_GROUP} --jar-path ${ADMIN_SERVER_JAR}  --skip-clone-settings
 
