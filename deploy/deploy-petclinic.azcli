@@ -1,7 +1,6 @@
-
-cd spring-petclinic-microservices
-mvn clean package -DskipTests -Denv=cloud
 cd ..
+mvn clean package -DskipTests -Denv=cloud
+cd deploy
 API_GATEWAY="api-gateway"
 API_GATEWAY_JAR="../spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-2.3.6.jar"
 ADMIN_SERVER="admin-server"
