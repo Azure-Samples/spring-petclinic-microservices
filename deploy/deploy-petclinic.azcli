@@ -1,0 +1,56 @@
+
+cd spring-petclinic-microservices
+mvn clean package -DskipTests -Denv=cloud
+cd ..
+API_GATEWAY="api-gateway"
+API_GATEWAY_JAR="../spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-2.3.6.jar"
+ADMIN_SERVER="admin-server"
+ADMIN_SERVER_JAR="../spring-petclinic-admin-server/target/spring-petclinic-admin-server-2.3.6.jar"
+CUSTOMERS_SERVICE="customers-service"
+CUSTOMERS_SERVICE_JAR=" ../spring-petclinic-customers-service/target/spring-petclinic-customers-service-2.3.6.jar"
+VETS_SERVICE="vets-service"
+VETS_SERVICE_JAR="../spring-petclinic-vets-service/target/spring-petclinic-vets-service-2.3.6.jar"
+VISITS_SERVICE="visits-service"
+VISITS_SERVICE_JAR="../spring-petclinic-visits-service/target/spring-petclinic-visits-service-2.3.6.jar"
+MYSQL_SERVER_FULL_NAME="pcsms-db-rg-asclab.mysql.database.azure.com"
+MYSQL_DATABASE_NAME="petclinic"
+MYSQL_SERVER_ADMIN_LOGIN_NAME="sqlAdmin"
+MYSQL_SERVER_ADMIN_PASSWORD="Corp123456789!"
+RESOURCE_GROUP=$1
+REGION="westeurope"
+SPRING_CLOUD_SERVICE=$2
+
+az configure --defaults \
+    group=${RESOURCE_GROUP} \
+    location=${REGION} \
+    spring-cloud=${SPRING_CLOUD_SERVICE}
+
+echo ${API_GATEWAY}
+echo ${API_GATEWAY_JAR}
+
+az spring-cloud app deploy --name ${API_GATEWAY} \
+    --jar-path ${API_GATEWAY_JAR} \
+    --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql' \
+    --no-wait 
+    
+    
+az spring-cloud app deploy  --name ${ADMIN_SERVER} \
+    --jar-path ${ADMIN_SERVER_JAR} \
+    --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql' \
+    --no-wait 
+    
+    
+az spring-cloud app deploy --name ${CUSTOMERS_SERVICE} \
+    --jar-path ${CUSTOMERS_SERVICE_JAR} \
+    --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql' \
+    --no-wait 
+    
+az spring-cloud app deploy --name ${VETS_SERVICE} \
+    --jar-path ${VETS_SERVICE_JAR} \
+    --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql' \
+    --no-wait
+              
+az spring-cloud app deploy --name ${VISITS_SERVICE} \
+    --jar-path ${VISITS_SERVICE_JAR} \
+    --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql' \
+    --no-wait 
