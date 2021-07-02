@@ -1,0 +1,26 @@
+echo usage: create-with-vnet [azure spring cloud resource group] [azure spring cloud name] [hub resource group]
+echo This script deploys an Azure Spring Cloud service in a VNET. It also deploys a HUB that includes a bastion host and a testing VM
+echo "Spring Cloud Resource group:$1"
+echo "Spring Cloud service:$2"
+echo "Hub resource group:$2"
+SPRING_CLOUD_RG=$1
+SPRING_CLOUD=$2
+PRIVATE_DNS_RG=$3
+
+echo Deploying infrastructure using terraform. It takes a while, grab a coffee or do bio break or both things...
+terraform init
+terraform apply -auto-approve -var "hub_rg=$PRIVATE_DNS_RG" -var "asc_rg=$SPRING_CLOUD_RG" -var "asc_service_name=$SPRING_CLOUD" 
+echo I m back!
+
+# echo Configuring private DNS entry...
+
+# SERVICE_RUNTIME_RG=`az spring-cloud show -g $SPRING_CLOUD_RG -n $SPRING_CLOUD --query "properties.networkProfile.serviceRuntimeNetworkResourceGroup" -o tsv`
+# echo ASC Service Runtime resource group $SERVICE_RUNTIME_RG
+# IP_ADDRESS=`az network lb frontend-ip list --lb-name kubernetes-internal -g $SERVICE_RUNTIME_RG --query "[0].privateIpAddress" -o tsv`
+# echo Private service ip address $IP_ADDRESS
+
+# az network private-dns record-set a add-record -g $PRIVATE_DNS_RG --zone-name "private.azuremicroservices.io" --record-set-name \* --ipv4-address $IP_ADDRESS 
+
+echo build and deploy 
+sh ./deploy-petclinic.azcli $SPRING_CLOUD_RG $SPRING_CLOUD
+echo done

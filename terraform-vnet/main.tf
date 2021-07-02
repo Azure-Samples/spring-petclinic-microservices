@@ -6,6 +6,9 @@ provider "azurerm" {
   features {}
 }
 
+provider "azuread" {
+}
+
 variable "resource_group" {
   type    = string
 }
@@ -99,12 +102,17 @@ resource "azurerm_subnet" "service_subnet" {
   address_prefixes     = [var.service_subnet_address_space]
 }
 
+# Retrieve Azure Spring Cloud Provisioner from AAD
+data "azuread_service_principal" "azure_spring_cloud_provisioner" {
+  display_name = "Azure Spring Cloud Resource Provider"
+}
 
-# Make sure the SPID used to provision terraform has privilage to do role assignments. 
+# Make sure the SPID used to provision terraform has privilage to do role assignments.
+# use the service principal retrieved instead of hardcode it
 resource "azurerm_role_assignment" "ra" {
   scope                = azurerm_virtual_network.test.id
   role_definition_name = "Owner"
-  principal_id         = "d2531223-68f9-459e-b225-5592f90d145e"
+  principal_id         = data.azuread_service_principal.azure_spring_cloud_provisioner.object_id
 }
 
 resource "azurerm_spring_cloud_service" "example" {

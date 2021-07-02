@@ -20,3 +20,9 @@ generated/
 # Skip scripts
 .scripts/
 .vscode/settings.json
+deploy/.terraform/
+terraform.tfstate
+terraform.tfvars
+.terraform.*
+
+deploy/terraform.tfstate.backup
