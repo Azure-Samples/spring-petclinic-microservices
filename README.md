@@ -8,6 +8,10 @@ description: "Deploy Spring microservices using Azure Spring Cloud and MySQL"
 urlFragment: "spring-petclinic-microservices"
 ---
 
+> IMPORTANT:
+> 
+> Azure Spring Cloud Enterprise tier is in private preview now. If you have interest and want to have a try, please [contact us](https://aka.ms/spring-cloud-enterprise).
+
 # Deploy Spring Microservices using Azure Spring Cloud and MySQL 
 
 Azure Spring Cloud enables you to easily run a Spring Boot based microservices application on Azure.

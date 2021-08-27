@@ -95,6 +95,15 @@
 
     <profiles>
         <profile>
+            <id>dev</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-config</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>buildDocker</id>
             <build>
                 <plugins>
