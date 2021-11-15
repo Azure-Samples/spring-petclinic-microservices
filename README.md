@@ -295,7 +295,7 @@ Create a MySQL database in Azure Database for MySQL.
 ```bash
     // create mysql server
     az mysql server create --resource-group ${RESOURCE_GROUP} \
-     --name ${MYSQL_SERVER_NAME}  --location eastus \
+     --name ${MYSQL_SERVER_NAME}  --location ${REGION} \
      --admin-user ${MYSQL_SERVER_ADMIN_NAME} \
      --admin-password ${MYSQL_SERVER_ADMIN_PASSWORD} \
      --sku-name GP_Gen5_2 \
