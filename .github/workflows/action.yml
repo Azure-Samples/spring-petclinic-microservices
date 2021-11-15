@@ -28,14 +28,14 @@ jobs:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     
     - name: Get service SP from Key Vault
-      uses: Azure/get-keyvault-secrets@v1.0
+      uses: Azure/get-keyvault-secrets@v1
       with:
         keyvault: $KEYVAULT
         secrets: "AZURE-CREDENTIALS-FOR-SPRING"
       id: keyvaultaction
     
     - name: Get MySQL Secrets from Key Vault
-      uses: Azure/get-keyvault-secrets@v1.0
+      uses: Azure/get-keyvault-secrets@v1
       with:
         keyvault: $KEYVAULT
         secrets: "MYSQL-SERVER-FULL-NAME,MYSQL-DATABASE-NAME,MYSQL-SERVER-ADMIN-LOGIN-NAME,MYSQL-SERVER-ADMIN-PASSWORD"
