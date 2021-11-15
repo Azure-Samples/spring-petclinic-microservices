@@ -106,7 +106,7 @@ jobs:
         service-name: ${{ env.SPRING_CLOUD_SERVICE }}
         app-name: ${{ env.VETS_SERVICE }}
         use-staging-deployment: false
-        package: ${{ github.workspace }}/{{ env.VETS_SERVICE_JAR }}
+        package: ${{ github.workspace }}/${{ env.VETS_SERVICE_JAR }}
         # jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
         # Environment variables to be entered using the syntax '-key value'. Values containing spaces should be enclosed in double quotes.
         environment-variables: "-MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
