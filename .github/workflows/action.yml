@@ -30,14 +30,14 @@ jobs:
     - name: Get service SP from Key Vault
       uses: Azure/get-keyvault-secrets@v1
       with:
-        keyvault: yuchenkv
+        keyvault: ${{ env.KEYVAULT }}
         secrets: "AZURE-CREDENTIALS-FOR-SPRING"
       id: keyvaultaction
     
     - name: Get MySQL Secrets from Key Vault
       uses: Azure/get-keyvault-secrets@v1
       with:
-        keyvault: $KEYVAULT
+        keyvault: ${{ env.KEYVAULT }}
         secrets: "MYSQL-SERVER-FULL-NAME,MYSQL-DATABASE-NAME,MYSQL-SERVER-ADMIN-LOGIN-NAME,MYSQL-SERVER-ADMIN-PASSWORD"
       id: mysqlsecrets
       
@@ -67,9 +67,6 @@ jobs:
       run: |
           az configure --defaults group=$RESOURCE_GROUP
           az configure --defaults spring-cloud=$SPRING_CLOUD_SERVICE
-          az spring-cloud app deploy --name $API_GATEWAY \
-            --jar-path ${{ github.workspace }}/$API_GATEWAY_JAR \
-            --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql'
           az spring-cloud app deploy --name $ADMIN_SERVER \
             --jar-path ${{ github.workspace }}/$ADMIN_SERVER_JAR \
             --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql'
@@ -87,23 +84,17 @@ jobs:
               MYSQL_DATABASE_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
               MYSQL_SERVER_ADMIN_LOGIN_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
               MYSQL_SERVER_ADMIN_PASSWORD=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}
-          az spring-cloud app deploy --name $VISITS_SERVICE \
-            --jar-path ${{ github.workspace }}/$VISITS_SERVICE_JAR \
-            --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql' \
-            --env MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
-              MYSQL_DATABASE_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
-              MYSQL_SERVER_ADMIN_LOGIN_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
-              MYSQL_SERVER_ADMIN_PASSWORD=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}
 
     - name: deploy to production with artifact
       uses: azure/spring-cloud-deploy@v1
       with:
         azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
         action: Deploy
-        service-name: $SPRING_CLOUD_SERVICE
-        app-name:  $API_GATEWAY
+        service-name: ${{ env.SPRING_CLOUD_SERVICE }}
+        app-name:  ${{ env.API_GATEWAY }}
         use-staging-deployment: false
-        package: ${{ github.workspace }}/$API_GATEWAY_JAR
+        package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
+        jvm-options: '-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql'
 
     - name: deploy to production with artifact
       uses: azure/spring-cloud-deploy@v1
@@ -113,7 +104,7 @@ jobs:
         service-name: $SPRING_CLOUD_SERVICE
         app-name:  $VISITS_SERVICE
         use-staging-deployment: false
-        package: ${{ github.workspace }}/$VISITS_SERVICE_JAR
+        package: ${{ github.workspace }}/${{ env.VISITS_SERVICE_JAR }}
         jvm-options: '-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql'
         environment-variables: -MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }}
               -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }}
