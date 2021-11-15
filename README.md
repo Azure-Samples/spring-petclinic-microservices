@@ -599,10 +599,10 @@ Then, follow [the steps here](https://docs.microsoft.com/azure/spring-cloud/spri
 In the end, add this service principal as secrets named "AZURE_CREDENTIALS" in your forked GitHub repo following [the steps here](https://docs.microsoft.com/en-us/azure/spring-cloud/spring-cloud-github-actions-key-vault#add-access-policies-for-the-credential).
 
 ### Customize your workflow
-Finally, edit the workfolw file `.github/workflows/action.yml` in your forked repo to fill in the names of resource group and the Azure Spring Cloud instance name that you just created:
+Finally, edit the workfolw file `.github/workflows/action.yml` in your forked repo to fill in the azure subscription id and the Azure Spring Cloud instance name that you just created:
 ```yml
     env:
-      RESOURCE_GROUP: resource-group-name # customize this
+      AZURE_SUBSCRIPTION: azure-subscription-id # customize this
       SPRING_CLOUD_SERVICE: azure-spring-cloud-name # customize this
 ```
 After you commited this change, you will see GitHub Actions triggered to build and deploy all the apps in the repo to your Azure Spring Cloud instance.
