@@ -2,7 +2,7 @@ name: Deploy to Azure Spring Cloud with Key Vault
 on: [push]
 
 env:
-  RESOURCE_GROUP: yuchensp # customize this
+  AZURE_SUBSCRIPTION: 799c12ba-353c-44a1-883d-84808ebb2216 # customize this
   SPRING_CLOUD_SERVICE: yuchensp # customize this
   KEYVAULT: yuchenkv # customize this
   # ==== APPS ====:
@@ -59,54 +59,20 @@ jobs:
     - name: maven build, clean
       run: |
         mvn clean package -DskipTests -Denv=cloud
-        
-    - name: Install ASC AZ extension
-      run: az extension add --name spring-cloud
-   
-    - name: Deploy with AZ CLI commands
-      run: |
-          az configure --defaults group=$RESOURCE_GROUP
-          az configure --defaults spring-cloud=$SPRING_CLOUD_SERVICE
-          az spring-cloud app deploy --name $ADMIN_SERVER \
-            --jar-path ${{ github.workspace }}/$ADMIN_SERVER_JAR \
-            --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql'
-          az spring-cloud app deploy --name $CUSTOMERS_SERVICE \
-            --jar-path ${{ github.workspace }}/$CUSTOMERS_SERVICE_JAR \
-            --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql' \
-            --env MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
-              MYSQL_DATABASE_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
-              MYSQL_SERVER_ADMIN_LOGIN_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
-              MYSQL_SERVER_ADMIN_PASSWORD=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}
-          az spring-cloud app deploy --name $VETS_SERVICE \
-            --jar-path ${{ github.workspace }}/$VETS_SERVICE_JAR \
-            --jvm-options='-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql' \
-            --env MYSQL_SERVER_FULL_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
-              MYSQL_DATABASE_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
-              MYSQL_SERVER_ADMIN_LOGIN_NAME=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
-              MYSQL_SERVER_ADMIN_PASSWORD=${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}
+      
 
-    - name: deploy to production with artifact
-      uses: azure/spring-cloud-deploy@v1
+    - name: Deploy for app visits-service
+      uses: Azure/spring-cloud-deploy@v1
       with:
         azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
-        action: Deploy
+        action: deploy
         service-name: ${{ env.SPRING_CLOUD_SERVICE }}
-        app-name:  ${{ env.API_GATEWAY }}
-        use-staging-deployment: false
-        package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
-        jvm-options: '-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql'
-
-    - name: deploy to production with artifact
-      uses: azure/spring-cloud-deploy@v1
-      with:
-        azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
-        action: Deploy
-        service-name: $SPRING_CLOUD_SERVICE
-        app-name:  $VISITS_SERVICE
+        app-name: ${{ env.VISITS_SERVICE }}
         use-staging-deployment: false
         package: ${{ github.workspace }}/${{ env.VISITS_SERVICE_JAR }}
-        jvm-options: '-Xms2048m -Xmx2048m -Dspring.profiles.active=mysql'
-        environment-variables: -MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }}
-              -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }}
-              -MYSQL_SERVER_ADMIN_LOGIN_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }}
-              -MYSQL_SERVER_ADMIN_PASSWORD ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}
+        jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
+        # Environment variables to be entered using the syntax '-key value'. Values containing spaces should be enclosed in double quotes.
+        environment-variables: "-MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
+        -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
+        -MYSQL_SERVER_ADMIN_LOGIN_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
+        -MYSQL_SERVER_ADMIN_PASSWORD ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"
