@@ -2,20 +2,21 @@ name: Deploy to Azure Spring Cloud with Key Vault
 on: [push]
 
 env:
-  RESOURCE_GROUP: petclinic-demo # customize this
-  SPRING_CLOUD_SERVICE: petclinic-demo # customize this
-  # ==== APPS ====:  
+  RESOURCE_GROUP: yuchensp # customize this
+  SPRING_CLOUD_SERVICE: yuchensp # customize this
+  KEYVAULT: yuchenkv # customize this
+  # ==== APPS ====:
   API_GATEWAY: api-gateway
   ADMIN_SERVER: admin-server
   CUSTOMERS_SERVICE: customers-service
   VETS_SERVICE: vets-service
   VISITS_SERVICE: visits-service
-  # ==== JARS ====:  
-  API_GATEWAY_JAR: spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-2.2.1.jar
-  ADMIN_SERVER_JAR: spring-petclinic-admin-server/target/spring-petclinic-admin-server-2.2.1.jar
-  CUSTOMERS_SERVICE_JAR: spring-petclinic-customers-service/target/spring-petclinic-customers-service-2.2.1.jar
-  VETS_SERVICE_JAR: spring-petclinic-vets-service/target/spring-petclinic-vets-service-2.2.1.jar
-  VISITS_SERVICE_JAR: spring-petclinic-visits-service/target/spring-petclinic-visits-service-2.2.1.jar
+  # ==== JARS ====:
+  API_GATEWAY_JAR: spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-2.5.1.jar
+  ADMIN_SERVER_JAR: spring-petclinic-admin-server/target/spring-petclinic-admin-server-2.5.1.jar
+  CUSTOMERS_SERVICE_JAR: spring-petclinic-customers-service/target/spring-petclinic-customers-service-2.5.1.jar
+  VETS_SERVICE_JAR: spring-petclinic-vets-service/target/spring-petclinic-vets-service-2.5.1.jar
+  VISITS_SERVICE_JAR: spring-petclinic-visits-service/target/spring-petclinic-visits-service-2.5.1.jar
 
 jobs:
   build:
@@ -29,14 +30,14 @@ jobs:
     - name: Get service SP from Key Vault
       uses: Azure/get-keyvault-secrets@v1.0
       with:
-        keyvault: "petclinicdemokv"
+        keyvault: $KEYVAULT
         secrets: "AZURE-CREDENTIALS-FOR-SPRING"
       id: keyvaultaction
     
     - name: Get MySQL Secrets from Key Vault
       uses: Azure/get-keyvault-secrets@v1.0
       with:
-        keyvault: "petclinicdemokv"
+        keyvault: $KEYVAULT
         secrets: "MYSQL-SERVER-FULL-NAME,MYSQL-DATABASE-NAME,MYSQL-SERVER-ADMIN-LOGIN-NAME,MYSQL-SERVER-ADMIN-PASSWORD"
       id: mysqlsecrets
       
