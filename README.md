@@ -610,7 +610,7 @@ env:
   KEYVAULT: your-keyvault-name # customize this
 ```
 Once you push this change, you will see GitHub Actions triggered to build and deploy all the apps in the repo to your Azure Spring Cloud instance.
-![](./media/automate-deployments-using-github-actions.jpg)
+![](./media/automate-deployments-using-github-actions.png)
 
 ## Unit-3 - Manage application secrets using Azure KeyVault
 
