@@ -61,7 +61,7 @@ jobs:
         mvn clean package -DskipTests -Denv=cloud
       
     - name: Deploy api-gateway
-      uses: RuoyuWang-MS/spring-cloud-deploy@v1
+      uses: Azure/spring-cloud-deploy@v1
       with:
         azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
         action: deploy
@@ -69,63 +69,63 @@ jobs:
         app-name: ${{ env.API_GATEWAY }}
         use-staging-deployment: false
         package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
-        # jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
+        jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
     
-#     - name: Deploy admin-server
-#       uses:  RuoyuWang-MS/spring-cloud-deploy@v1
-#       with:
-#         azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
-#         action: deploy
-#         service-name: ${{ env.SPRING_CLOUD_SERVICE }}
-#         app-name: ${{ env.ADMIN_SERVER }}
-#         use-staging-deployment: false
-#         package: ${{ github.workspace }}/${{ env.ADMIN_SERVER_JAR }}
-#         jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql    
+    - name: Deploy admin-server
+      uses:  Azure/spring-cloud-deploy@v1
+      with:
+        azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+        action: deploy
+        service-name: ${{ env.SPRING_CLOUD_SERVICE }}
+        app-name: ${{ env.ADMIN_SERVER }}
+        use-staging-deployment: false
+        package: ${{ github.workspace }}/${{ env.ADMIN_SERVER_JAR }}
+        jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql    
 
-    # - name: Deploy customers-service
-    #   uses: Azure/spring-cloud-deploy@v1
-    #   with:
-    #     azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
-    #     action: deploy
-    #     service-name: ${{ env.SPRING_CLOUD_SERVICE }}
-    #     app-name: ${{ env.CUSTOMERS_SERVICE }}
-    #     use-staging-deployment: false
-    #     package: ${{ github.workspace }}/${{ env.CUSTOMERS_SERVICE_JAR }}
-    #     # jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
-    #     # Environment variables to be entered using the syntax '-key value'. Values containing spaces should be enclosed in double quotes.
-    #     environment-variables: "-MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
-    #     -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
-    #     -MYSQL_SERVER_ADMIN_LOGIN_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
-    #     -MYSQL_SERVER_ADMIN_PASSWORD ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"
+    - name: Deploy customers-service
+      uses: Azure/spring-cloud-deploy@v1
+      with:
+        azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+        action: deploy
+        service-name: ${{ env.SPRING_CLOUD_SERVICE }}
+        app-name: ${{ env.CUSTOMERS_SERVICE }}
+        use-staging-deployment: false
+        package: ${{ github.workspace }}/${{ env.CUSTOMERS_SERVICE_JAR }}
+        jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
+        # Environment variables to be entered using the syntax '-key value'. Values containing spaces should be enclosed in double quotes.
+        environment-variables: "-MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
+        -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
+        -MYSQL_SERVER_ADMIN_LOGIN_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
+        -MYSQL_SERVER_ADMIN_PASSWORD ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"
 
-    # - name: Deploy vets-service
-    #   uses: Azure/spring-cloud-deploy@v1
-    #   with:
-    #     azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
-    #     action: deploy
-    #     service-name: ${{ env.SPRING_CLOUD_SERVICE }}
-    #     app-name: ${{ env.VETS_SERVICE }}
-    #     use-staging-deployment: false
-    #     package: ${{ github.workspace }}/${{ env.VETS_SERVICE_JAR }}
-    #     # jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
-    #     # Environment variables to be entered using the syntax '-key value'. Values containing spaces should be enclosed in double quotes.
-    #     environment-variables: "-MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
-    #     -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
-    #     -MYSQL_SERVER_ADMIN_LOGIN_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
-    #     -MYSQL_SERVER_ADMIN_PASSWORD ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"    
+    - name: Deploy vets-service
+      uses: Azure/spring-cloud-deploy@v1
+      with:
+        azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+        action: deploy
+        service-name: ${{ env.SPRING_CLOUD_SERVICE }}
+        app-name: ${{ env.VETS_SERVICE }}
+        use-staging-deployment: false
+        package: ${{ github.workspace }}/${{ env.VETS_SERVICE_JAR }}
+        jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
+        # Environment variables to be entered using the syntax '-key value'. Values containing spaces should be enclosed in double quotes.
+        environment-variables: "-MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
+        -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
+        -MYSQL_SERVER_ADMIN_LOGIN_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
+        -MYSQL_SERVER_ADMIN_PASSWORD ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"    
 
-    # - name: Deploy visits-service
-    #   uses: Azure/spring-cloud-deploy@v1
-    #   with:
-    #     azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
-    #     action: deploy
-    #     service-name: ${{ env.SPRING_CLOUD_SERVICE }}
-    #     app-name: ${{ env.VISITS_SERVICE }}
-    #     use-staging-deployment: false
-    #     package: ${{ github.workspace }}/${{ env.VISITS_SERVICE_JAR }}
-    #     # jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
-    #     # Environment variables to be entered using the syntax '-key value'. Values containing spaces should be enclosed in double quotes.
-    #     environment-variables: "-MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
-    #     -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
-    #     -MYSQL_SERVER_ADMIN_LOGIN_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
-    #     -MYSQL_SERVER_ADMIN_PASSWORD ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"
+    - name: Deploy visits-service
+      uses: Azure/spring-cloud-deploy@v1
+      with:
+        azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+        action: deploy
+        service-name: ${{ env.SPRING_CLOUD_SERVICE }}
+        app-name: ${{ env.VISITS_SERVICE }}
+        use-staging-deployment: false
+        package: ${{ github.workspace }}/${{ env.VISITS_SERVICE_JAR }}
+        jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
+        # Environment variables to be entered using the syntax '-key value'. Values containing spaces should be enclosed in double quotes.
+        environment-variables: "-MYSQL_SERVER_FULL_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-FULL-NAME }} \
+        -MYSQL_DATABASE_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-DATABASE-NAME }} \
+        -MYSQL_SERVER_ADMIN_LOGIN_NAME ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-LOGIN-NAME }} \
+        -MYSQL_SERVER_ADMIN_PASSWORD ${{ steps.mysqlsecrets.outputs.MYSQL-SERVER-ADMIN-PASSWORD }}"
