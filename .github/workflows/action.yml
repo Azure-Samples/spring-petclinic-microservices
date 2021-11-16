@@ -60,27 +60,27 @@ jobs:
       run: |
         mvn clean package -DskipTests -Denv=cloud
       
-    # - name: Deploy api-gateway
-    #   uses: Azure/spring-cloud-deploy@v1
-    #   with:
-    #     azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
-    #     action: deploy
-    #     service-name: ${{ env.SPRING_CLOUD_SERVICE }}
-    #     app-name: ${{ env.API_GATEWAY }}
-    #     use-staging-deployment: false
-    #     package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
-    #     # jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
-    
-    - name: Deploy admin-server
-      uses:  RuoyuWang-MS/spring-cloud-deploy@v1
+    - name: Deploy api-gateway
+      uses: Azure/spring-cloud-deploy@v1
       with:
         azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
         action: deploy
         service-name: ${{ env.SPRING_CLOUD_SERVICE }}
-        app-name: ${{ env.ADMIN_SERVER }}
+        app-name: ${{ env.API_GATEWAY }}
         use-staging-deployment: false
-        package: ${{ github.workspace }}/${{ env.ADMIN_SERVER_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql    
+        package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
+        # jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql
+    
+#     - name: Deploy admin-server
+#       uses:  RuoyuWang-MS/spring-cloud-deploy@v1
+#       with:
+#         azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
+#         action: deploy
+#         service-name: ${{ env.SPRING_CLOUD_SERVICE }}
+#         app-name: ${{ env.ADMIN_SERVER }}
+#         use-staging-deployment: false
+#         package: ${{ github.workspace }}/${{ env.ADMIN_SERVER_JAR }}
+#         jvm-options: -Xms2048m -Xmx2048m -Dspring.profiles.active=mysql    
 
     # - name: Deploy customers-service
     #   uses: Azure/spring-cloud-deploy@v1
