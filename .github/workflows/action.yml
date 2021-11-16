@@ -61,7 +61,7 @@ jobs:
         mvn clean package -DskipTests -Denv=cloud
       
     - name: Deploy api-gateway
-      uses: Azure/spring-cloud-deploy@v1
+      uses: RuoyuWang-MS/spring-cloud-deploy@v1
       with:
         azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
         action: deploy
