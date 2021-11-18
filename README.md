@@ -153,7 +153,7 @@ Then, set the environment:
 Login to the Azure CLI and choose your active subscription. Be sure to choose the active subscription that is whitelisted for Azure Spring Cloud
 
 ```bash
-    az login
+    az login # --use-device-code , if using  codespaces
     az account list -o table
     az account set --subscription ${SUBSCRIPTION}
 ```
@@ -307,13 +307,15 @@ Create a MySQL database in Azure Database for MySQL.
      --server ${MYSQL_SERVER_NAME} \
      --resource-group ${RESOURCE_GROUP} \
      --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+
+    export MY_IP=$(curl -s http://whatismyip.akamai.com/)
     
     // allow access from your dev machine for testing
     az mysql server firewall-rule create --name devMachine \
      --server ${MYSQL_SERVER_NAME} \
      --resource-group ${RESOURCE_GROUP} \
-     --start-ip-address <ip-address-of-your-dev-machine> \
-     --end-ip-address <ip-address-of-your-dev-machine>
+     --start-ip-address $MY_IP \
+     --end-ip-address $MY_IP
     
     // increase connection timeout
     az mysql server configuration set --name wait_timeout \

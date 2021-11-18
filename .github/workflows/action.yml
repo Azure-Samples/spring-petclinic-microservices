@@ -1,10 +1,10 @@
 name: Deploy to Azure Spring Cloud with Key Vault
-on: [push]
+on: [push, workflow_dispatch]
 
 env:
-  AZURE_SUBSCRIPTION: 799c12ba-353c-44a1-883d-84808ebb2216 # customize this
-  SPRING_CLOUD_SERVICE: yuchensp # customize this
-  KEYVAULT: yuchenkv # customize this
+  AZURE_SUBSCRIPTION: f869415f-5cff-46a3-b728-20659d14d62d #customize/move to secrets
+  SPRING_CLOUD_SERVICE: springkv-eneros #customize
+  KEYVAULT: spring-cloud-eneros #customize
   # ==== APPS ====:
   API_GATEWAY: api-gateway
   ADMIN_SERVER: admin-server
