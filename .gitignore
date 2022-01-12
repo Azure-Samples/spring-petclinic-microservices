@@ -1,3 +1,9 @@
+nohup.out
+memo.txt
+*.sh
+logs
+tmp
+
 # Maven
 target/
 !.mvn/wrapper/maven-wrapper.jar

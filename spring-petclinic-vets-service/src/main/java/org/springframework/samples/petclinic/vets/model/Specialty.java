@@ -22,6 +22,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 /**
  * Models a {@link Vet Vet's} specialty (for example, dentistry).
  *
@@ -29,6 +32,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "specialties")
+@Cache(region="common", usage = CacheConcurrencyStrategy.READ_WRITE)  // or @Cacheable(true) for JPA
 public class Specialty {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

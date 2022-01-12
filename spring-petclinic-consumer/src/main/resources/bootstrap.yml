@@ -1,15 +1,11 @@
 spring:
   cloud:
     config:
-      #uri: http://localhost:8888
       uri: http://172.19.70.211:8888
   application:
-    name: visits-service
+    name: consumer
 ---
 spring:
   config:
     activate:
       on-profile: docker
-  cloud:
-    config:
-      uri: http://config-server:8888

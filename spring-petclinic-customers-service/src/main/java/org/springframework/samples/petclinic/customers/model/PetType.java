@@ -22,12 +22,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 /**
  * @author Juergen Hoeller
  * Can be Cat, Dog, Hamster...
  */
 @Entity
 @Table(name = "types")
+@Cache(region="common", usage = CacheConcurrencyStrategy.READ_WRITE)  // or @Cacheable(true) for JPA
 public class PetType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

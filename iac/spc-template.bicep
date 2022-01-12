@@ -1,0 +1,67 @@
+param Spring_spc_krc_003_name string = 'spc-krc-003'
+param virtualNetworks_vnet_krc_011_externalid string = '/subscriptions/b6d4cd53-eeab-41d1-93a8-665daf75fce1/resourceGroups/TEST1/providers/Microsoft.Network/virtualNetworks/vnet-krc-011'
+
+resource Spring_spc_krc_003_name_resource 'Microsoft.AppPlatform/Spring@2021-09-01-preview' = {
+  name: Spring_spc_krc_003_name
+  location: 'koreacentral'
+  sku: {
+    name: 'S0'
+    tier: 'Standard'
+  }
+  properties: {
+    networkProfile: {
+      serviceRuntimeSubnetId: '${virtualNetworks_vnet_krc_011_externalid}/subnets/sub1'
+      appSubnetId: '${virtualNetworks_vnet_krc_011_externalid}/subnets/sub2'
+      serviceCidr: '10.0.0.0/16,10.1.0.0/16,10.2.0.1/16'
+      serviceRuntimeNetworkResourceGroup: 'ap-svc-rt_${Spring_spc_krc_003_name}_koreacentral'
+      appNetworkResourceGroup: 'ap-app_${Spring_spc_krc_003_name}_koreacentral'
+    }
+  }
+}
+
+resource Spring_spc_krc_003_name_app01 'Microsoft.AppPlatform/Spring/apps@2021-09-01-preview' = {
+  name: '${Spring_spc_krc_003_name_resource.name}/app01'
+  location: 'koreacentral'
+  properties: {
+    public: false
+    activeDeploymentName: 'default'
+    fqdn: 'spc-krc-003.private.azuremicroservices.io'
+    httpsOnly: false
+    temporaryDisk: {
+      sizeInGB: 5
+      mountPath: '/tmp'
+    }
+    persistentDisk: {
+      sizeInGB: 0
+      mountPath: '/persistent'
+    }
+    enableEndToEndTLS: false
+  }
+}
+
+resource Spring_spc_krc_003_name_app01_default 'Microsoft.AppPlatform/Spring/apps/deployments@2021-09-01-preview' = {
+  name: '${Spring_spc_krc_003_name_app01.name}/default'
+  sku: {
+    name: 'S0'
+    tier: 'Standard'
+    capacity: 1
+  }
+  properties: {
+    source: {
+      type: 'Jar'
+      relativePath: '<default>'
+    }
+    deploymentSettings: {
+      cpu: 1
+      memoryInGB: 1
+      resourceRequests: {
+        cpu: '1'
+        memory: '1Gi'
+      }
+      runtimeVersion: 'Java_8'
+    }
+  }
+  dependsOn: [
+    Spring_spc_krc_003_name_resource
+  ]
+}

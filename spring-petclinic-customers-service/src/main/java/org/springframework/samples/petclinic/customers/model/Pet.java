@@ -29,6 +29,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.core.style.ToStringCreator;
 
 /**
@@ -41,6 +44,7 @@ import org.springframework.core.style.ToStringCreator;
  */
 @Entity
 @Table(name = "pets")
+@Cache(region="common", usage = CacheConcurrencyStrategy.READ_WRITE)  // or @Cacheable(true) for JPA
 public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,0 +1,141 @@
+# COMMON APPLICATION PROPERTIES
+
+server:
+  # start services on random port by default
+  port: 0
+  # The stop processing uses a timeout which provides a grace period during which existing requests will be allowed to complete but no new requests will be permitted
+  shutdown: graceful
+
+# embedded database init, supports mysql too trough the 'mysql' spring profile
+spring:
+  datasource:
+    schema: classpath*:db/hsqldb/schema.sql
+    data: classpath*:db/hsqldb/data.sql
+  sleuth:
+    sampler:
+      probability: 1.0
+  cloud:
+    config:
+      # Allow the microservices to override the remote properties with their own System properties or config file
+      allow-override: true
+      # Override configuration with any local property source
+      override-none: true
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+
+# Spring Boot 1.5 makes actuator secure by default
+management.security.enabled: false
+# Enable all Actuators and not only the two available by default /health and /info starting Spring Boot 2.0
+management.endpoints.web.exposure.include: "*"
+
+# Temporary hack required by the Spring Boot 2 / Spring Cloud Finchley branch
+# Waiting issue https://github.com/spring-projects/spring-boot/issues/13042
+spring.cloud.refresh.refreshable: false
+
+# Logging
+#logging.level.org.springframework: INFO
+logging:
+  level:
+    org:
+      springframework: info
+      hibernate:
+        type:
+          descriptor:
+            sql: debug
+    io:
+      netty:
+        resolver:
+          dns: info
+
+
+# Metrics
+management:
+  endpoint:
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Chaos Engineering
+---
+spring:
+  config:
+    activate:
+      on-profile: chaos-monkey      
+management.endpoint.chaosmonkey.enabled: true
+chaos:
+  monkey:
+    enabled: true
+    watcher:
+      component: false
+      controller: false
+      repository: false
+      rest-controller: false
+      service: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: mysql
+  datasource:
+    schema: classpath*:db/mysql/schema.sql
+    data: classpath*:db/mysql/data.sql
+    url: jdbc:mysql://127.0.0.1:3306/petclinic?useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: <secret-name:spring-datasource-password>
+    initialization-mode: ALWAYS
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      javax:
+        persistence:
+          sharedCache: 
+            mode: ENABLE_SELECTIVE 
+      hibernate:
+        show_sql: false
+        format_sql: false
+        generate_statistics: true
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.redisson.hibernate.RedissonRegionFactory
+          redisson:
+            fallback: true
+            file: classpath:redisson.json
+      redis:
+        expiryInSeconds:
+          default: 120
+          hibernate:
+            common: 0
+            account: 1200
+  cloud:
+    azure:
+      eventhub:
+        connection-string: Endpoint=sb://eh-krc-001.servicebus.windows.net/;SharedAccessKeyName=tester01;SharedAccessKey=7IEe+AJPrcNBSo0bsT7b/XtdqMl0SGf8huYeGxFD4t8=;EntityPath=eh001
+        checkpoint-storage-account: sakr001
+        checkpoint-access-key: 1ekukR1YQPYaGi460c+Hp4+H+D6N4pYgAWFO0xO2UlcOYKHYuT8ZTYG673pwBwhTedbbEnvthX9BfOKqUSI9VQ==
+        checkpoint-container: blob-kr-002
+        namespace: eh-krc-001
+    stream:
+      function:
+        definition: consume;supply
+      bindings:
+        consume-in-0:
+          destination: eh001
+          group: $Default
+        supply-out-0:
+          destination: eh001        

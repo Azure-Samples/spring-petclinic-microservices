@@ -15,9 +15,21 @@
  */
 package org.springframework.samples.petclinic.visits;
 
+import java.util.function.Consumer;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
+import org.springframework.integration.annotation.ServiceActivator;
+import org.springframework.messaging.Message;
+import org.springframework.samples.petclinic.visits.web.APIResponseFilter;
+
+import com.azure.spring.integration.core.EventHubHeaders;
+import com.azure.spring.integration.core.api.reactor.Checkpointer;
+import static com.azure.spring.integration.core.AzureHeaders.CHECKPOINTER;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Maciej Szarlinski
@@ -26,7 +38,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 @SpringBootApplication
 public class VisitsServiceApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(VisitsServiceApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(VisitsServiceApplication.class, args);
+	}
+	
 }

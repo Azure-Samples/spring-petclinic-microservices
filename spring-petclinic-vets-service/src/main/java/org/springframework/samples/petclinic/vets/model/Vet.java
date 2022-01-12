@@ -15,6 +15,7 @@
  */
 package org.springframework.samples.petclinic.vets.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,6 +35,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlElement;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 
@@ -48,7 +51,8 @@ import org.springframework.beans.support.PropertyComparator;
  */
 @Entity
 @Table(name = "vets")
-public class Vet {
+@Cache(region="common", usage = CacheConcurrencyStrategy.READ_WRITE)  // or @Cacheable(true) for JPA
+public class Vet implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

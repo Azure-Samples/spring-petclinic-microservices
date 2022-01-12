@@ -108,6 +108,44 @@
             <artifactId>assertj-core</artifactId>
             <scope>test</scope>
         </dependency>
+
+		<!-- 2nd level cache -->
+		<!-- https://mvnrepository.com/artifact/org.redisson/redisson-hibernate-53 -->
+		<dependency>
+		    <groupId>org.redisson</groupId>
+		    <artifactId>redisson-hibernate-53</artifactId>
+		    <version>3.16.7</version>
+		</dependency>
+
+		<!-- Azure Key Vault  -->
+		<dependency>
+			<groupId>com.azure</groupId>
+			<artifactId>azure-security-keyvault-secrets</artifactId>
+			<version>4.3.5</version> <!-- 4.3.5, 4.2.3 -->
+		</dependency>
+		<dependency>
+			<groupId>com.azure</groupId>
+			<artifactId>azure-identity</artifactId>
+			<version>1.4.2</version> <!-- 1.4.2, 1.2.0 -->
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.nimbusds/oauth2-oidc-sdk -->
+		<dependency>
+		    <groupId>com.nimbusds</groupId>
+		    <artifactId>oauth2-oidc-sdk</artifactId>
+		    <version>7.4</version>
+		    <scope>runtime</scope>
+		</dependency>
+
+		<!--
+        <dependency>
+			<groupId>org.springframework.samples.petclinic.common</groupId>
+			<artifactId>spring-petclinic-common</artifactId>
+			<version>2.5.1</version>
+			<scope>runtime</scope>
+		</dependency>
+        -->
+
 	</dependencies>
 
     <profiles>

@@ -1,7 +1,8 @@
 spring:
   cloud:
     config:
-      uri: http://localhost:8888
+      #uri: http://localhost:8888
+      uri: http://172.19.70.211:8888
   application:
     name: customers-service
 ---

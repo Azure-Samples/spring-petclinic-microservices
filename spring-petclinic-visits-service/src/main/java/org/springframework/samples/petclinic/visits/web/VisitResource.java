@@ -46,32 +46,30 @@ import org.springframework.web.bind.annotation.RestController;
 @Timed("petclinic.visit")
 class VisitResource {
 
-    private final VisitRepository visitRepository;
+	private final VisitRepository visitRepository;
 
-    @PostMapping("owners/*/pets/{petId}/visits")
-    @ResponseStatus(HttpStatus.CREATED)
-   public Visit create(
-        @Valid @RequestBody Visit visit,
-        @PathVariable("petId") int petId) {
+	@PostMapping("owners/*/pets/{petId}/visits")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Visit create(@Valid @RequestBody Visit visit, @PathVariable("petId") int petId) {
 
-        visit.setPetId(petId);
-        log.info("Saving visit {}", visit);
-        return visitRepository.save(visit);
-    }
+		visit.setPetId(petId);
+		log.info("Saving visit {}", visit);
+		return visitRepository.save(visit);
+	}
 
-    @GetMapping("owners/*/pets/{petId}/visits")
-   public List<Visit> visits(@PathVariable("petId") int petId) {
-        return visitRepository.findByPetId(petId);
-    }
+	@GetMapping("owners/*/pets/{petId}/visits")
+	public List<Visit> visits(@PathVariable("petId") int petId) {
+		return visitRepository.findByPetId(petId);
+	}
 
-    @GetMapping("pets/visits")
-   public Visits visitsMultiGet(@RequestParam("petId") List<Integer> petIds) {
-        final List<Visit> byPetIdIn = visitRepository.findByPetIdIn(petIds);
-        return new Visits(byPetIdIn);
-    }
+	@GetMapping("pets/visits")
+	public Visits visitsMultiGet(@RequestParam("petId") List<Integer> petIds) {
+		final List<Visit> byPetIdIn = visitRepository.findByPetIdIn(petIds);
+		return new Visits(byPetIdIn);
+	}
 
-    @Value
-    static class Visits {
-        List<Visit> items;
-    }
+	@Value
+	static class Visits {
+		List<Visit> items;
+	}
 }
