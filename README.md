@@ -127,7 +127,11 @@ Create a bash script with environment variables by making a copy of the supplied
     cp .scripts/setup-env-variables-azure-template.sh .scripts/setup-env-variables-azure.sh
 ```
 
-Open `.scripts/setup-env-variables-azure.sh` and enter the following information:
+Open `.scripts/setup-env-variables-azure.sh` with a text editor. In cloud shell you can easily use **VS Code** to open files. 
+
+For example: `code .scripts/setup-env-variables-azure.sh`
+
+Once the file is open, enter the following information:
 
 ```bash
 
@@ -621,6 +625,8 @@ Add them as secrets to your Key Vault:
 ```bash
     az keyvault secret set --vault-name ${KEY_VAULT} --name "AZURE-CREDENTIALS-FOR-SPRING" --value "<results above>"
 ```
+If getting the JSON block above into your `az` command is challenging, you can also add this secret in the Azure Portal! 
+
 
 ### Grant access to Key Vault with Service Principal
 To generate a key to access the Key Vault, execute command below:
