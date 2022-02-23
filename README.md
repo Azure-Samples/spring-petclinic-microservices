@@ -105,7 +105,6 @@ have the CLI extension, you may need to upgrade to the latest using --
 ### Create a new folder and clone the sample app repository to your Azure Cloud account  
 
 ```bash
-    mkdir source-code
     git clone https://github.com/azure-samples/spring-petclinic-microservices
 ```
 
@@ -127,7 +126,11 @@ Create a bash script with environment variables by making a copy of the supplied
     cp .scripts/setup-env-variables-azure-template.sh .scripts/setup-env-variables-azure.sh
 ```
 
-Open `.scripts/setup-env-variables-azure.sh` and enter the following information:
+Open `.scripts/setup-env-variables-azure.sh` with a text editor. In cloud shell you can easily use **VS Code** to open files. 
+
+For example: `code .scripts/setup-env-variables-azure.sh`
+
+Once the file is open, enter the following information:
 
 ```bash
 
@@ -148,7 +151,7 @@ Then, set the environment:
 ```bash
     source .scripts/setup-env-variables-azure.sh
 ```
-
+For Azure Cloud Shell, note that if your shell times out or you close the browser, you will lose all your environment variables. When you start a new shell instance, just run the `aource` command again.
 ### Login to Azure 
 Login to the Azure CLI and choose your active subscription. Be sure to choose the active subscription that is whitelisted for Azure Spring Cloud
 
@@ -404,7 +407,7 @@ Deploy Spring Boot applications to Azure.
 ```
 
 ```bash
-    az spring-cloud app show --name ${API_GATEWAY} | grep url
+    az spring-cloud app show --name ${API_GATEWAY} --query properties.url -o tsv
 ```
 
 Navigate to the URL provided by the previous command to open the Pet Clinic application.
@@ -456,16 +459,16 @@ Spring Boot includes a number of additional features to help you monitor and man
 
 Actuator endpoints let you monitor and interact with your application. By default, Spring Boot application exposes `health` and `info` endpoints to show arbitrary application info and health information. Apps in this project are pre-configured to expose all the Actuator endpoints.
 
-You can try them out by opening the following app actuator endpoints in a browser:
+The app actuator endpoints are below. You can see what they return by making requests with `curl`. You can trying opening the actuator endpoints in a browser but you will need the full URLs if you copy this from a terminal or cloud shell into a browser.
 
 ```bash
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/actuator/
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/actuator/env
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/actuator/configprops
+curl https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/actuator/
+curl https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/actuator/env
+curl https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/actuator/configprops
 
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator/env
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator/configprops
+curl https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator
+curl https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator/env
+curl https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator/configprops
 ```
 
 #### Start monitoring Spring Boot apps and dependencies - in Application Insights
@@ -514,7 +517,7 @@ You can see these custom metrics in the `Metrics` blade:
 ![](./media/petclinic-microservices-custom-metrics.jpg)
 
 You can use the Availability Test feature in Application Insights and monitor 
-the availability of applications:
+the availability of applications. You will have to set this up yourself, below is an example of what this looks like.
 ![](./media/petclinic-microservices-availability.jpg)
 
 Navigate to the `Live Metrics` blade - you can see live metrics on screen with low latencies < 1 second:
@@ -621,6 +624,8 @@ Add them as secrets to your Key Vault:
 ```bash
     az keyvault secret set --vault-name ${KEY_VAULT} --name "AZURE-CREDENTIALS-FOR-SPRING" --value "<results above>"
 ```
+If getting the JSON block above into your `az` command is challenging, you can also add this secret in the Azure Portal! 
+
 
 ### Grant access to Key Vault with Service Principal
 To generate a key to access the Key Vault, execute command below:
