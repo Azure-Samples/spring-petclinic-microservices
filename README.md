@@ -268,23 +268,23 @@ Create 5 apps.
 
 ```bash
     az spring-cloud app create --name ${API_GATEWAY} --instance-count 1 --assign-endpoint true \
-        --memory 2 \
+        --memory 2Gi \
         --jvm-options='-Xms2048m -Xmx2048m'
     
     az spring-cloud app create --name ${ADMIN_SERVER} --instance-count 1 --assign-endpoint true \
-        --memory 2 \
+        --memory 2Gi \
         --jvm-options='-Xms2048m -Xmx2048m'
     
     az spring-cloud app create --name ${CUSTOMERS_SERVICE} --instance-count 1 \
-        --memory 2 \
+        --memory 2Gi \
         --jvm-options='-Xms2048m -Xmx2048m'
     
     az spring-cloud app create --name ${VETS_SERVICE} --instance-count 1 \
-        --memory 2 \
+        --memory 2Gi \
         --jvm-options='-Xms2048m -Xmx2048m'
     
     az spring-cloud app create --name ${VISITS_SERVICE} --instance-count 1 \
-        --memory 2 \
+        --memory 2Gi \
         --jvm-options='-Xms2048m -Xmx2048m'
 ```
 
