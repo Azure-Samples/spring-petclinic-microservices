@@ -6,8 +6,8 @@ products:
 - Azure Spring Cloud
 description: "Deploy Spring Boot apps using Azure Spring Cloud and MySQL"
 urlFragment: "spring-petclinic-microservices"
----
-
+---Cancel changes
+-- sprinng
 # Deploy Spring Boot apps using Azure Spring Cloud and MySQL 
 
 Azure Spring Cloud enables you to easily run a Spring Boot applications on Azure.
