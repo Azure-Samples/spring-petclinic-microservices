@@ -28,6 +28,8 @@ services:
     entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
     ports:
     - 8081:8081
+    environment:
+      - SERVER_PORT=8081
 
   visits-service:
     image: springcommunity/spring-petclinic-visits-service
@@ -39,6 +41,8 @@ services:
     entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
     ports:
      - 8082:8082
+    environment:
+     - SERVER_PORT=8082
 
   vets-service:
     image: springcommunity/spring-petclinic-vets-service
@@ -50,6 +54,9 @@ services:
     entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
     ports:
      - 8083:8083
+    environment:
+     - SERVER_PORT=8083
+
 
   api-gateway:
     image: springcommunity/spring-petclinic-api-gateway
@@ -61,6 +68,7 @@ services:
     entrypoint: ["./dockerize","-wait=tcp://discovery-server:8761","-timeout=60s","--","java", "org.springframework.boot.loader.JarLauncher"]
     ports:
      - 8080:8080
+
 
   tracing-server:
     image: openzipkin/zipkin

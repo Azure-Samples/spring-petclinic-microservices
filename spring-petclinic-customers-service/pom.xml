@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>org.springframework.samples</groupId>
 		<artifactId>spring-petclinic-microservices</artifactId>
-        <version>2.5.1</version>
+        <version>2.7.6</version>
 	</parent>
 
     <properties>
@@ -62,7 +62,13 @@
             <artifactId>spring-cloud-sleuth-zipkin</artifactId>
         </dependency>
         -->
-        
+
+        <!-- Azure JDBC Starter -->
+        <dependency>
+            <groupId>com.azure.spring</groupId>
+            <artifactId>spring-cloud-azure-starter-jdbc-mysql</artifactId>
+        </dependency>
+
         <!-- Third parties -->
         <dependency>
             <groupId>mysql</groupId>
