@@ -668,7 +668,7 @@ The actions expects the following secrets to be set in your GitHub repository:
 
 * AZURE_TENANT_ID: The tenant ID of the Azure subscription hosting the Azure Spring Apps instance.
 * AZURE_SUBSCRIPTION_ID: The subscription ID of the Azure subscription hosting the Azure Spring Apps instance.
-* AZURE_CLIENT_ID: The client ID of the service principal created in the previous step.
+* AZURE_CLIENT_ID: The client ID of the Azure Active Directory application created in the previous step.
 * RESOURCE_GROUP: The resource group hosting the Azure Spring Apps instance.
 * SPRING_APPS_SERVICE_NAME: The name of the Azure Spring Apps instance.
 
