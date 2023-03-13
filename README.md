@@ -634,7 +634,7 @@ az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/<GITH
 
 In the previous command, replace the following values:
 CREDENTIAL-NAME: The name of the credential. This is the name that will appear in AAD portal.
-ASSIGNEE_OBJECTID: The object ID of the service principal created in the previous step.
+GITHUB_OBJECTID: The object ID of the service principal created in the previous step.
 OWNER: The owner of the GitHub repository hosting the code. So, if you forked the repository, the owner is your GitHub username.
 
 ```bash
