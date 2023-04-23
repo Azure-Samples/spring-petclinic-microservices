@@ -688,7 +688,7 @@ Enable System Assigned Identities for applications and export identities to envi
     az spring app identity assign --name ${VETS_SERVICE}
     export VETS_SERVICE_IDENTITY=$(az spring app show --name ${VETS_SERVICE} --query 'identity.principalId' --output tsv)
     
-    az spring app identity assign --name --name ${VISITS_SERVICE}
+    az spring app identity assign --name ${VISITS_SERVICE}
     export VISITS_SERVICE_IDENTITY=$(az spring app show --name ${VISITS_SERVICE} --query 'identity.principalId' --output tsv)
 ```
 
