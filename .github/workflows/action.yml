@@ -26,7 +26,7 @@ env:
   VISITS_SERVICE_TGT: spring-petclinic-visits-service/
 
 jobs:
-  Auth:
+  Deploy_API_Gateway:
     runs-on: ubuntu-latest
     steps:
     - name: Azure CLI Login
@@ -36,10 +36,6 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-  Deploy_API_Gateway:
-    runs-on: ubuntu-latest
-    needs: Auth
-    steps:
     - name: Checkout your repo
       uses: actions/checkout@v3
 
@@ -60,8 +56,14 @@ jobs:
 
   Deploy_Admin_Server:
     runs-on: ubuntu-latest
-    needs: Auth
     steps:
+    - name: Azure CLI Login
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
     - name: Checkout your repo
       uses: actions/checkout@v3
 
@@ -82,8 +84,14 @@ jobs:
 
   Deploy_Customers_Service:
     runs-on: ubuntu-latest
-    needs: Auth
     steps:
+    - name: Azure CLI Login
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
     - name: Checkout your repo
       uses: actions/checkout@v3
 
@@ -103,8 +111,14 @@ jobs:
 
   Deploy_Vets_Service:
     runs-on: ubuntu-latest
-    needs: Auth
     steps:
+    - name: Azure CLI Login
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
     - name: Checkout your repo
       uses: actions/checkout@v3
 
@@ -124,8 +138,14 @@ jobs:
 
   Deploy_Visits_Service:
     runs-on: ubuntu-latest
-    needs: Auth
     steps:
+    - name: Azure CLI Login
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
     - name: Checkout your repo
       uses: actions/checkout@v3
 
