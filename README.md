@@ -620,7 +620,7 @@ Create a service principal for the application:
 ASSIGNEE_OBJECTID=$(az ad sp create --id $AZURE_CLIENT_ID --query id --output tsv)
 ```
 
-Create a service principle with enough scope/role to manage your Azure Spring Apps instance. Following example assigns contributor role on the resource group hosting the infrastructure:
+Create a service principal with enough scope/role to manage your Azure Spring Apps instance. Following example assigns contributor role on the resource group hosting the infrastructure:
 
 ```bash
 az role assignment create --role contributor --subscription ${SUBSCRIPTION} --assignee-object-id  $ASSIGNEE_OBJECTID --assignee-principal-type ServicePrincipal --scope /subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCE_GROUP}
