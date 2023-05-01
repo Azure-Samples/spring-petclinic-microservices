@@ -26,7 +26,7 @@ env:
   VISITS_SERVICE_TGT: spring-petclinic-visits-service/
 
 jobs:
-  build:
+  Auth:
     runs-on: ubuntu-latest
     steps:
     - name: Azure CLI Login
@@ -35,80 +35,109 @@ jobs:
         client-id: ${{ secrets.AZURE_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    
+
+  Deploy_API_Gateway:
+    runs-on: ubuntu-latest
+    needs: Auth
+    steps:
     - name: Checkout your repo
       uses: actions/checkout@v3
 
-    - name: Deploy api-gateway
+    - name: Deploy ${{ env.API_GATEWAY }}
       uses: azure/CLI@v1
       with:
         azcliversion: ${{ env.AZCLI_VER }}
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
           az spring app deploy \
-                  --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                  -g ${{ secrets.RESOURCE_GROUP }} \
                   --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
-                  --name ${{ env.API_GATEWAY }} \
+                  -n ${{ env.API_GATEWAY }} \
                   --source-path ${{ github.workspace }} \
                   --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
                   --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
                   --target-module ${{ env.API_GATEWAY_TGT }}
 
-    - name: Deploy admin-server
+  Deploy_Admin_Server:
+    runs-on: ubuntu-latest
+    needs: Auth
+    steps:
+    - name: Checkout your repo
+      uses: actions/checkout@v3
+
+    - name: Deploy ${{ env.ADMIN_SERVER }}
       uses: azure/CLI@v1
       with:
         azcliversion: ${{ env.AZCLI_VER }}
         inlineScript: |
           az config set extension.use_dynamic_install=yes_without_prompt
           az spring app deploy \
-                  --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                  -g ${{ secrets.RESOURCE_GROUP }} \
                   --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
-                  --name ${{ env.ADMIN_SERVER }} \
+                  -n ${{ env.ADMIN_SERVER }} \
                   --source-path ${{ github.workspace }} \
                   --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
                   --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
                   --target-module ${{ env.ADMIN_SERVER_TGT }}
 
-    - name: Deploy customers-service
+  Deploy_Customers_Service:
+    runs-on: ubuntu-latest
+    needs: Auth
+    steps:
+    - name: Checkout your repo
+      uses: actions/checkout@v3
+
+    - name: Deploy ${{ env.CUSTOMERS_SERVICE }}
       uses: azure/CLI@v1
       with:
         azcliversion: ${{ env.AZCLI_VER }}
         inlineScript: |
-          az config set extension.use_dynamic_install=yes_without_prompt
           az spring app deploy \
-                  --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                  -g ${{ secrets.RESOURCE_GROUP }} \
                   --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
-                  --name ${{ env.CUSTOMERS_SERVICE }} \
+                  -n ${{ env.CUSTOMERS_SERVICE }} \
                   --source-path ${{ github.workspace }} \
                   --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
                   --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
                   --target-module ${{ env.CUSTOMERS_SERVICE_TGT }}
 
-    - name: Deploy vets-service
+  Deploy_Vets_Service:
+    runs-on: ubuntu-latest
+    needs: Auth
+    steps:
+    - name: Checkout your repo
+      uses: actions/checkout@v3
+
+    - name: Deploy ${{ env.VETS_SERVICE }}
       uses: azure/CLI@v1
       with:
         azcliversion: ${{ env.AZCLI_VER }}
         inlineScript: |
-          az config set extension.use_dynamic_install=yes_without_prompt
           az spring app deploy \
-                  --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                  -g ${{ secrets.RESOURCE_GROUP }} \
                   --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
-                  --name ${{ env.VETS_SERVICE }} \
+                  -n ${{ env.VETS_SERVICE }} \
                   --source-path ${{ github.workspace }} \
                   --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
                   --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
                   --target-module ${{ env.VETS_SERVICE_TGT }}
 
-    - name: Deploy visits-service
+  Deploy_Visits_Service:
+    runs-on: ubuntu-latest
+    needs: Auth
+    steps:
+    - name: Checkout your repo
+      uses: actions/checkout@v3
+
+    - name: Deploy ${{ env.VISITS_SERVICE }}
       uses: azure/CLI@v1
       with:
         azcliversion: ${{ env.AZCLI_VER }}
         inlineScript: |
-          az config set extension.use_dynamic_install=yes_without_prompt
           az spring app deploy \
-                  --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                  -g ${{ secrets.RESOURCE_GROUP }} \
                   --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
-                  --name ${{ env.VISITS_SERVICE }} \
+                  -n ${{ env.VISITS_SERVICE }} \
                   --source-path ${{ github.workspace }} \
                   --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
                   --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
