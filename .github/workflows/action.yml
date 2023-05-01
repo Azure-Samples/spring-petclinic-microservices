@@ -1,4 +1,4 @@
-name: Deploy to Azure Spring Apps using passwordless connections (build with maven)
+name: (build with maven) Deploy all services to Azure Spring Apps using passwordless connections
 
 on:
   push:
