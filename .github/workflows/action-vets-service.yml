@@ -5,7 +5,7 @@ on:
     branches:
       - ja_JP
     paths:
-      - '${{ env.VETS_SERVICE_TGT }}/**'
+      - 'spring-petclinic-vets-service/**'
   workflow_dispatch:
   workflow_call:
 

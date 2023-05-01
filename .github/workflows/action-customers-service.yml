@@ -5,7 +5,7 @@ on:
     branches:
       - ja_JP
     paths:
-      - '${{ env.CUSTOMERS_SERVICE_TGT }}/**'
+      - 'spring-petclinic-customers-service/**'
   workflow_dispatch:
   workflow_call:
 
