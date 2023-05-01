@@ -612,7 +612,6 @@ Create an Azure Active Directory application:
 AZURE_CLIENT_ID=$(az ad app create --display-name github-petclinic-actions --query appId --output tsv)
 GITHUB_OBJECTID=$(az ad app show --id $AZURE_CLIENT_ID --query id --output tsv)
 ```
-```
 
 Create a service principal for the application:
 
