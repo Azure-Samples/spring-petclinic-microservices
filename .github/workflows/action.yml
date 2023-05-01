@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - ja_JP
+  workflow_dispatch:
 
 permissions:
   id-token: write
