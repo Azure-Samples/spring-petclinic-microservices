@@ -23,6 +23,12 @@ env:
   CUSTOMERS_SERVICE_JAR: spring-petclinic-customers-service/target/spring-petclinic-customers-service-3.0.6.jar
   VETS_SERVICE_JAR: spring-petclinic-vets-service/target/spring-petclinic-vets-service-3.0.6.jar
   VISITS_SERVICE_JAR: spring-petclinic-visits-service/target/spring-petclinic-visits-service-3.0.6.jar
+  # ==== TARGETS ====:
+  API_GATEWAY_TGT: spring-petclinic-api-gateway
+  ADMIN_SERVER_TGT: spring-petclinic-admin-server
+  CUSTOMERS_SERVICE_TGT: spring-petclinic-customers-service
+  VETS_SERVICE_TGT: spring-petclinic-vets-service
+  VISITS_SERVICE_TGT: spring-petclinic-visits-service/
 
 jobs:
   build:
@@ -38,32 +44,44 @@ jobs:
     - name: Checkout your repo
       uses: actions/checkout@v3
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: 17
-        distribution: 'microsoft'
-        cache: maven
+    # - name: Set up JDK 17
+    #   uses: actions/setup-java@v3
+    #   with:
+    #     java-version: 17
+    #     distribution: 'microsoft'
+    #     cache: maven
 
-    - name: maven build, clean
-      run: |
-        mvn clean package -DskipTests
+    # - name: maven build, clean
+    #   run: |
+    #     mvn clean package -DskipTests
 
     - name: Deploy api-gateway
-      uses: azure/spring-apps-deploy@v1
+      # uses: azure/spring-apps-deploy@v1
+      # with:
+      #   azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      #   action: deploy
+      #   service-name: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
+      #   app-name: ${{ env.API_GATEWAY }}
+      #   use-staging-deployment: false
+      #   package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
+      #   jvm-options: -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6
+      #   runtime-version: Java_17
+      #   cpu: 1
+      #   memory: 3Gi
+      #   environment-variables: -SPRING_PROFILES_ACTIVE passwordless BP_JVM_VERSION=17
+      uses: azure/CLI@v1
       with:
-        azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        action: deploy
-        service-name: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
-        app-name: ${{ env.API_GATEWAY }}
-        use-staging-deployment: false
-        package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
-        jvm-options: -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6
-        runtime-version: Java_17
-        cpu: 1
-        memory: 3Gi
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless BP_JVM_VERSION=17
-    
+        azcliversion: 2.48.1
+        inlineScript: |
+          az spring app deploy \
+                  --resource-group ${{ secrets.RESOURCE_GROUP }} \
+                  --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
+                  --name ${{ env.API_GATEWAY }} \
+                  --source-path ${{ github.workspace }} \
+                  --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
+                  --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
+                  --target-module ${{ env.API_GATEWAY_TGT }}
+
     - name: Deploy admin-server
       uses:  azure/spring-apps-deploy@v1      
       with:
