@@ -1,4 +1,4 @@
-name: Deploy to Azure Spring Apps using passwordless connections
+name: Deploy any services to Spring Apps
 
 on:
   workflow_dispatch:
