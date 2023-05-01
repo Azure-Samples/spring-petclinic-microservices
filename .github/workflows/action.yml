@@ -100,6 +100,7 @@ jobs:
       with:
         azcliversion: ${{ env.AZCLI_VER }}
         inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
           az spring app deploy \
                   -g ${{ secrets.RESOURCE_GROUP }} \
                   --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
@@ -127,6 +128,7 @@ jobs:
       with:
         azcliversion: ${{ env.AZCLI_VER }}
         inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
           az spring app deploy \
                   -g ${{ secrets.RESOURCE_GROUP }} \
                   --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
@@ -154,6 +156,7 @@ jobs:
       with:
         azcliversion: ${{ env.AZCLI_VER }}
         inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
           az spring app deploy \
                   -g ${{ secrets.RESOURCE_GROUP }} \
                   --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
