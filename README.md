@@ -661,7 +661,7 @@ Azure ADにGitHubのfederated credentialsを追加します。
 ```bash
 az rest --method POST \
   --uri 'https://graph.microsoft.com/beta/applications/<GITHUB_OBJECTID>/federatedIdentityCredentials' \
-  --body '{"name":"<CREDENTIAL-NAME>","issuer":"https://token.actions.githubusercontent.com","subject":"repo:<OWNER>/spring-petclinic-microservices:ref:refs/heads/azure","description":"Testing","audiences":["api://AzureADTokenExchange"]}'
+  --body '{"name":"<CREDENTIAL-NAME>","issuer":"https://token.actions.githubusercontent.com","subject":"repo:<OWNER>/spring-petclinic-microservices:ref:refs/heads/azure","description":"チュートリアル","audiences":["api://AzureADTokenExchange"]}'
 ```
 
 上記コマンドで置き換える値は以下の通りです。
@@ -672,7 +672,7 @@ az rest --method POST \
 |OWNER|コードをホストしている GitHub リポジトリの所有者。リポジトリをフォークした場合、オーナーはGitHubのユーザー名。 |
 
 ```bash
-az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/00000000-0000-0000-0000-000000000000/federatedIdentityCredentials' --body '{"name":"github-petclinic-actions","issuer":"https://token.actions.githubusercontent.com","subject":"repo:Azure-Samples/spring-petclinic-microservices:ref:refs/heads/azure","description":"Testing","audiences":["api://AzureADTokenExchange"]}'
+az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/00000000-0000-0000-0000-000000000000/federatedIdentityCredentials' --body '{"name":"github-petclinic-actions","issuer":"https://token.actions.githubusercontent.com","subject":"repo:Azure-Samples/spring-petclinic-microservices:ref:refs/heads/azure","description":"チュートリアル","audiences":["api://AzureADTokenExchange"]}'
 ```
 
 コマンド実行結果は以下のようになるはずです。
@@ -683,7 +683,7 @@ az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/00000
   "audiences": [
     "api://AzureADTokenExchange"
   ],
-  "description": "Testing",
+  "description": "チュートリアル",
   "id": "000000000-0000-0000-0000-000000000000",
   "issuer": "https://token.actions.githubusercontent.com",
   "name": "github-petclinic-actions",
