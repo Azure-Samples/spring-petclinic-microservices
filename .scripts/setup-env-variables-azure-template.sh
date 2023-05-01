@@ -14,12 +14,19 @@ export VETS_SERVICE=vets-service
 export VISITS_SERVICE=visits-service
 
 # ==== JARS ====
-springboot_version=3.0.1
+springboot_version=3.0.6
 export API_GATEWAY_JAR=spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-${springboot_version}.jar
 export ADMIN_SERVER_JAR=spring-petclinic-admin-server/target/spring-petclinic-admin-server-${springboot_version}.jar
 export CUSTOMERS_SERVICE_JAR=spring-petclinic-customers-service/target/spring-petclinic-customers-service-${springboot_version}.jar
 export VETS_SERVICE_JAR=spring-petclinic-vets-service/target/spring-petclinic-vets-service-${springboot_version}.jar
 export VISITS_SERVICE_JAR=spring-petclinic-visits-service/target/spring-petclinic-visits-service-${springboot_version}.jar
+
+# ==== DIRs ==== (for ja_JP)
+export API_GATEWAY_DIR=spring-petclinic-api-gateway
+export ADMIN_SERVER_DIR=spring-petclinic-admin-server
+export CUSTOMERS_SERVICE_DIR=spring-petclinic-customers-service
+export VETS_SERVICE_DIR=spring-petclinic-vets-service
+export VISITS_SERVICE_DIR=spring-petclinic-visits-service
 
 # ==== MYSQL INFO ====
 export MYSQL_SERVER_NAME=mysql-petclinic # customize this

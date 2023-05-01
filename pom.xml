@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.1</version>
+        <version>3.0.6</version>
     </parent>
 
     <groupId>org.springframework.samples</groupId>
     <artifactId>spring-petclinic-microservices</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.6</version>
     <name>${project.artifactId}</name>
     <packaging>pom</packaging>
 
@@ -27,17 +27,17 @@
 
     <properties>
         <java.version>17</java.version>
-        <assertj.version>3.17.1</assertj.version>
+        <assertj.version>3.24.2</assertj.version>
 
-        <spring-cloud.version>2022.0.0</spring-cloud.version>
-        <chaos-monkey-spring-boot.version>2.3.10</chaos-monkey-spring-boot.version>
-        <jolokia-core.version>1.7.1</jolokia-core.version>
+        <spring-cloud.version>2022.0.2</spring-cloud.version>
+        <chaos-monkey-spring-boot.version>3.0.1</chaos-monkey-spring-boot.version>
+        <jolokia-core.version>1.7.2</jolokia-core.version>
 
         <docker.image.prefix>springcommunity</docker.image.prefix>
         <docker.image.exposed.port>9090</docker.image.exposed.port>
         <docker.image.dockerfile.dir>${basedir}</docker.image.dockerfile.dir>
         <docker.image.dockerize.version>v0.6.1</docker.image.dockerize.version>
-        <docker.plugin.version>1.2.0</docker.plugin.version>
+        <docker.plugin.version>1.2.2</docker.plugin.version>
         <version.spring.cloud.azure>5.0.0</version.spring.cloud.azure>
     </properties>
 

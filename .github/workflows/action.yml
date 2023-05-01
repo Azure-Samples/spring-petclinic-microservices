@@ -1,110 +1,20 @@
-name: Deploy to Azure Spring Apps using passwordless connections
-on: [push]
+name: Deploy any services to Spring Apps
+
+on:
+  workflow_dispatch:
 
 permissions:
   id-token: write
   contents: read
 
-env:
-  # ==== APPS ====:
-  API_GATEWAY: api-gateway
-  ADMIN_SERVER: admin-server
-  CUSTOMERS_SERVICE: customers-service
-  VETS_SERVICE: vets-service
-  VISITS_SERVICE: visits-service
-  # ==== JARS ====:
-  API_GATEWAY_JAR: spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-3.0.1.jar
-  ADMIN_SERVER_JAR: spring-petclinic-admin-server/target/spring-petclinic-admin-server-3.0.1.jar
-  CUSTOMERS_SERVICE_JAR: spring-petclinic-customers-service/target/spring-petclinic-customers-service-3.0.1.jar
-  VETS_SERVICE_JAR: spring-petclinic-vets-service/target/spring-petclinic-vets-service-3.0.1.jar
-  VISITS_SERVICE_JAR: spring-petclinic-visits-service/target/spring-petclinic-visits-service-3.0.1.jar
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Azure CLI Login
-      uses: azure/login@v1
-      with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    
-    - name: Checkout your repo
-      uses: actions/checkout@v2
-      
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        java-version: 17
-        distribution: 'microsoft'
-        cache: maven
-
-    - name: maven build, clean
-      run: |
-        mvn clean package -DskipTests
-    
-    - name: Deploy api-gateway
-      uses: azure/spring-apps-deploy@v1
-      with:
-        azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        action: deploy
-        service-name: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
-        app-name: ${{ env.API_GATEWAY }}
-        use-staging-deployment: false
-        package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
-    
-    - name: Deploy admin-server
-      uses:  azure/spring-apps-deploy@v1      
-      with:
-        azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        action: deploy
-        service-name: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
-        app-name: ${{ env.ADMIN_SERVER }}
-        use-staging-deployment: false
-        package: ${{ github.workspace }}/${{ env.ADMIN_SERVER_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
-        environment-variables: "-SPRING_PROFILES_ACTIVE passwordless"
-
-    - name: Deploy customers-service
-      uses: azure/spring-apps-deploy@v1      
-      with:
-        azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        action: deploy
-        service-name: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
-        app-name: ${{ env.CUSTOMERS_SERVICE }}
-        use-staging-deployment: false
-        package: ${{ github.workspace }}/${{ env.CUSTOMERS_SERVICE_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
-
-    - name: Deploy vets-service
-      uses: azure/spring-apps-deploy@v1      
-      with:
-        azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        action: deploy
-        service-name: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
-        app-name: ${{ env.VETS_SERVICE }}
-        use-staging-deployment: false
-        package: ${{ github.workspace }}/${{ env.VETS_SERVICE_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
-
-    - name: Deploy visits-service
-      uses: azure/spring-apps-deploy@v1
-      with:
-        azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-        action: deploy
-        service-name: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
-        app-name: ${{ env.VISITS_SERVICE }}
-        use-staging-deployment: false
-        package: ${{ github.workspace }}/${{ env.VISITS_SERVICE_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
+  call-deploy_API_Gateway:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-api-gateway.yml@ja_JP
+  call-deploy_Admin_Server:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-admin-server.yml@ja_JP
+  call-deploy_Customers_Service:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-customers-service.yml@ja_JP
+  call-deploy_Vets_Service:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-vets-service.yml@ja_JP
+  call-deploy_Visits_Service:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-visits-service.yml@ja_JP
