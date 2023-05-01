@@ -73,6 +73,7 @@ jobs:
       with:
         azcliversion: 2.48.1
         inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
           az spring app deploy \
                   --resource-group ${{ secrets.RESOURCE_GROUP }} \
                   --service ${{ secrets.SPRING_APPS_SERVICE_NAME }} \
