@@ -14,7 +14,7 @@ export VETS_SERVICE=vets-service
 export VISITS_SERVICE=visits-service
 
 # ==== JARS ====
-springboot_version=3.0.1
+springboot_version=3.0.5
 export API_GATEWAY_JAR=spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-${springboot_version}.jar
 export ADMIN_SERVER_JAR=spring-petclinic-admin-server/target/spring-petclinic-admin-server-${springboot_version}.jar
 export CUSTOMERS_SERVICE_JAR=spring-petclinic-customers-service/target/spring-petclinic-customers-service-${springboot_version}.jar
