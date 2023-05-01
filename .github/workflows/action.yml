@@ -7,16 +7,14 @@ permissions:
   id-token: write
   contents: read
 
-
-
 jobs:
   call-deploy_API_Gateway:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-api-gateway.yml
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-api-gateway.yml@ja_JP
   call-deploy_Admin_Server:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-admin-server.yml
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-admin-server.yml@ja_JP
   call-deploy_Customers_Service:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-customers-service.yml
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-customers-service.yml@ja_JP
   call-deploy_Vets_Service:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-vets-service.yml
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-vets-service.yml@ja_JP
   call-deploy_Visits_Service:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-visits-service.yml
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-visits-service.yml@ja_JP
