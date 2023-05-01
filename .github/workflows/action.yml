@@ -9,12 +9,12 @@ permissions:
 
 jobs:
   call-deploy_API_Gateway:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-api-gateway.yml@Azure
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-api-gateway.yml
   call-deploy_Admin_Server:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-admin-server.yml@Azure
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-admin-server.yml
   call-deploy_Customers_Service:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-customers-service.yml@Azure
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-customers-service.yml
   call-deploy_Vets_Service:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-vets-service.yml@Azure
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-vets-service.yml
   call-deploy_Visits_Service:
-    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-visits-service.yml@Azure
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-visits-service.yml
