@@ -1,6 +1,14 @@
-name: Deploy to Azure Spring Apps using passwordless connections
-on: [push]
+name: (build with maven) Deploy all services to Azure Spring Apps using passwordless connections
 
+on:
+  push:
+    branches:
+      - azure
+  pull_request:
+    branches:
+      - azure
+  workflow_dispatch:
+    
 permissions:
   id-token: write
   contents: read
@@ -13,11 +21,11 @@ env:
   VETS_SERVICE: vets-service
   VISITS_SERVICE: visits-service
   # ==== JARS ====:
-  API_GATEWAY_JAR: spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-3.0.1.jar
-  ADMIN_SERVER_JAR: spring-petclinic-admin-server/target/spring-petclinic-admin-server-3.0.1.jar
-  CUSTOMERS_SERVICE_JAR: spring-petclinic-customers-service/target/spring-petclinic-customers-service-3.0.1.jar
-  VETS_SERVICE_JAR: spring-petclinic-vets-service/target/spring-petclinic-vets-service-3.0.1.jar
-  VISITS_SERVICE_JAR: spring-petclinic-visits-service/target/spring-petclinic-visits-service-3.0.1.jar
+  API_GATEWAY_JAR: spring-petclinic-api-gateway/target/spring-petclinic-api-gateway-3.0.6.jar
+  ADMIN_SERVER_JAR: spring-petclinic-admin-server/target/spring-petclinic-admin-server-3.0.6.jar
+  CUSTOMERS_SERVICE_JAR: spring-petclinic-customers-service/target/spring-petclinic-customers-service-3.0.6.jar
+  VETS_SERVICE_JAR: spring-petclinic-vets-service/target/spring-petclinic-vets-service-3.0.6.jar
+  VISITS_SERVICE_JAR: spring-petclinic-visits-service/target/spring-petclinic-visits-service-3.0.6.jar
 
 jobs:
   build:
@@ -31,21 +39,21 @@ jobs:
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
     
     - name: Checkout your repo
-      uses: actions/checkout@v2
-      
+      uses: actions/checkout@v3
+
     - name: Set up JDK 17
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: 17
-        distribution: 'microsoft'
+        distribution: 'adopt'
         cache: maven
 
-    - name: maven build, clean
+    - name: build with maven
       run: |
-        mvn clean package -DskipTests
-    
+        mvn -B clean package -DskipTests
+
     - name: Deploy api-gateway
-      uses: azure/spring-apps-deploy@v1
+      uses: azure/spring-apps-deploy@v1.4.0
       with:
         azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         action: deploy
@@ -53,12 +61,14 @@ jobs:
         app-name: ${{ env.API_GATEWAY }}
         use-staging-deployment: false
         package: ${{ github.workspace }}/${{ env.API_GATEWAY_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
+        jvm-options: -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6
+        # runtime-version: Java_17
+        cpu: 1
+        memory: 3Gi
         environment-variables: -SPRING_PROFILES_ACTIVE passwordless
     
     - name: Deploy admin-server
-      uses:  azure/spring-apps-deploy@v1      
+      uses:  azure/spring-apps-deploy@v1.4.0  
       with:
         azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         action: deploy
@@ -66,12 +76,14 @@ jobs:
         app-name: ${{ env.ADMIN_SERVER }}
         use-staging-deployment: false
         package: ${{ github.workspace }}/${{ env.ADMIN_SERVER_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
-        environment-variables: "-SPRING_PROFILES_ACTIVE passwordless"
+        jvm-options: -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6
+        # runtime-version: Java_17
+        cpu: 1
+        memory: 3Gi
+        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
 
     - name: Deploy customers-service
-      uses: azure/spring-apps-deploy@v1      
+      uses: azure/spring-apps-deploy@v1.4.0
       with:
         azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         action: deploy
@@ -79,12 +91,14 @@ jobs:
         app-name: ${{ env.CUSTOMERS_SERVICE }}
         use-staging-deployment: false
         package: ${{ github.workspace }}/${{ env.CUSTOMERS_SERVICE_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
+        jvm-options: -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6
+        # runtime-version: Java_17
+        cpu: 1
+        memory: 3Gi
         environment-variables: -SPRING_PROFILES_ACTIVE passwordless
 
     - name: Deploy vets-service
-      uses: azure/spring-apps-deploy@v1      
+      uses: azure/spring-apps-deploy@v1.4.0     
       with:
         azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         action: deploy
@@ -92,12 +106,14 @@ jobs:
         app-name: ${{ env.VETS_SERVICE }}
         use-staging-deployment: false
         package: ${{ github.workspace }}/${{ env.VETS_SERVICE_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
+        jvm-options: -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6
+        # runtime-version: Java_17
+        cpu: 1
+        memory: 3Gi
         environment-variables: -SPRING_PROFILES_ACTIVE passwordless
 
     - name: Deploy visits-service
-      uses: azure/spring-apps-deploy@v1
+      uses: azure/spring-apps-deploy@v1.4.0
       with:
         azure-subscription: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         action: deploy
@@ -105,6 +121,8 @@ jobs:
         app-name: ${{ env.VISITS_SERVICE }}
         use-staging-deployment: false
         package: ${{ github.workspace }}/${{ env.VISITS_SERVICE_JAR }}
-        jvm-options: -Xms2048m -Xmx2048m
-        runtime-version: Java_17
+        jvm-options: -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6
+        # runtime-version: Java_17
+        cpu: 1
+        memory: 3Gi
         environment-variables: -SPRING_PROFILES_ACTIVE passwordless

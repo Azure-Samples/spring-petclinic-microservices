@@ -1,0 +1,54 @@
+name: (Buildpacks) Deploy all services to Azure Spring Apps using passwordless connections
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  call-deploy_API_Gateway:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-api-gateway.yml@azure
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      SPRING_APPS_SERVICE_NAME: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
+      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+
+  call-deploy_Admin_Server:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-admin-server.yml@azure
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      SPRING_APPS_SERVICE_NAME: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
+      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+
+  call-deploy_Customers_Service:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-customers-service.yml@azure
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      SPRING_APPS_SERVICE_NAME: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
+      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+
+  call-deploy_Vets_Service:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-vets-service.yml@azure
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      SPRING_APPS_SERVICE_NAME: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
+      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+
+  call-deploy_Visits_Service:
+    uses: anishi1222/spring-petclinic-microservices/.github/workflows/action-visits-service.yml@azure
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      SPRING_APPS_SERVICE_NAME: ${{ secrets.SPRING_APPS_SERVICE_NAME }}
+      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}

@@ -8,115 +8,115 @@ description: "Deploy Spring Boot apps using Azure Spring Apps and MySQL"
 urlFragment: "spring-petclinic-microservices"
 ---
 
-# Deploy Spring Boot apps using Azure Spring Apps and MySQL
+# MySQLを使うSpring BootアプリをAzure Spring Appsにデプロイする
 
-Azure Spring Apps enables you to easily run a Spring Boot applications on Azure.
+Azure Spring Appsを使うと、Azure上でSpring Bootアプリケーションを簡単に実行できます。
 
-This quickstart shows you how to deploy an existing Java Spring Cloud application to Azure. When you're finished, you can continue to manage the application via the Azure CLI or switch to using the Azure Portal.
+このクイックスタートでは、既存のJava Spring CloudアプリケーションをAzureにデプロイする方法を説明します。終了後は、Azure CLIでアプリケーションの管理を継続しても、Azure Portalを使用しての管理に切り替えることも可能です。
 
-* [Deploy Spring Boot apps using Azure Spring Apps and MySQL](#deploy-spring-boot-apps-using-azure-spring-cloud-and-mysql)
-  * [What will you experience](#what-will-you-experience)
-  * [What you will need](#what-you-will-need)
-  * [Install the Azure CLI extension](#install-the-azure-cli-extension)
-  * [Clone and build the repo](#clone-and-build-the-repo)
-  * [Unit 1 - Deploy and monitor Spring Boot apps](#unit-1---deploy-and-monitor-spring-boot-apps)
-  * [Unit 2 - AUTOMATE deployments using GitHub Actions](#unit-2---automate-deployments-using-github-actions)
-  * [Unit 3 - Enable Managed Identities for applications in Azure Spring Apps](#unit-3---enable-managed-identities-for-applications-in-azure-spring-apps)
-  * [Next Steps](#next-steps)
+* [MySQLを使うSpring BootアプリをAzure Spring Appsにデプロイする](#MySQLを使うSpring-BootアプリをAzure-Spring-Appsにデプロイする)
+  * [このクイックスタートを終了すると](#このクイックスタートを終了すると)
+  * [必要なもの](#必要なもの)
+  * [Azure CLI拡張のインストール](#Azure-CLI拡張のインストール)
+  * [リポジトリのクローン](#リポジトリのクローン)
+  * [Unit 1 - Spring Bootアプリのデプロイと監視](#unit-1---Spring-Bootアプリのデプロイと監視)
+  * [Unit 2 - GitHub Actionsを使ったデプロイの自動化](#unit-2---GitHub-Actionsを使ったデプロイの自動化)
+  * [Unit 3 - Azure Spring AppsのアプリケーションのManaged Identitiesを有効化](#unit-3---Azure-Spring-AppsのアプリケーションのManaged-Identitiesを有効化)
+  * [さらに学ぶのであれば](#さらに学ぶのであれば)
 
-## What will you experience
-You will:
-- Build existing Spring Boot applications
-- Provision an Azure Spring Apps service instance. If you prefer Terraform, you may also provision using Terraform, see [`README-terraform`](./terraform/README-terraform.md)
-- Deploy applications to Azure
-- Connect applications to Azure Database for MySQL using Azure AD authentication
-- Open the application
-- Monitor applications
-- Automate deployments using GitHub Actions
-- Manage application secrets using Azure KeyVault
+## このクイックスタートを終了すると
 
-## What you will need
+このクイックスタートでは以下のことを体験できます。
+- 既存のSpring Bootアプリケーションのビルド
+- Azure Spring Apps サービスインスタンスのプロビジョニング
+  > Terraformがお好みの場合は、Terraformを使ったプロビジョニングも可能です。[`README-terraform`](./terraform/README-terraform.md) を参照してください。
+- アプリケーションをAzureにデプロイ
+- Azure AD認証を使用してAzure Database for MySQLにアプリケーションを接続
+- アプリケーションの実行
+- アプリケーションの監視
+- GitHub Actionsを使ったデプロイの自動化
+- Azure KeyVaultを利用したアプリケーションシークレットの管理
 
-In order to deploy a Java app to cloud, you need an Azure subscription. If you do not already have an Azure subscription, you can activate your [MSDN subscriber benefits](https://azure.microsoft.com/pricing/member-offers/msdn-benefits-details/) or sign up for a [free Azure account]((https://azure.microsoft.com/free/)).
+## 必要なもの
 
-In addition, you will need the following:
+Javaアプリをクラウドにデプロイするためには、Azureのサブスクリプションが必要です。Azureサブスクリプションをまだお持ちでない場合は、[MSDNサブスクライバー特典](https://azure.microsoft.com/pricing/member-offers/msdn-benefits-details/)を有効にするか、[無料のAzureアカウント]((https://azure.microsoft.com/free/)) にサインアップしてください。
 
-| [Azure CLI version 2.44.0 or higher](https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest) 
+さらに、以下のものが必要です。
+
+| [Azure CLI version 2.44.0 以上](https://docs.microsoft.com/cli/azure/install-azure-cli?view=azure-cli-latest) 
 | [Java 17](https://learn.microsoft.com/en-us/java/openjdk/download#openjdk-17) 
 | [Maven](https://maven.apache.org/download.cgi) 
 | [Git](https://git-scm.com/)
 |
 
-> Note - The Bash shell. While Azure CLI should behave identically on all environments, shell 
-semantics vary. Therefore, only bash can be used with the commands in this repo. 
-To complete these repo steps on Windows, use Git Bash that accompanies the Windows distribution of 
+> 注意 - Bash シェルを使ってください。Azure CLI はすべての環境で同じように動作するはずですが、シェルのセマンティクスはさまざまです。したがって、このレポのコマンドで使用できるのは bash だけです。
+Windows でこれらのレポの手順を完了するには、Windows ディストリビューションに付属している Git Bash を使用することもできますが、resource IDなど、先頭に `/` がある場合、ファイルパスと誤認識して補完する場合があるので、以下の環境変数を設定しておいてください。
 
-### OR Use Azure Cloud Shell
+```bash
+    export MSYS_NO_PATHCONV=1
+```
 
-Or, you can use the Azure Cloud Shell. Azure hosts Azure Cloud Shell, an interactive shell 
-environment that you can use through your browser. You can use the Bash with Cloud Shell 
-to work with Azure services. You can use the Cloud Shell pre-installed commands to run the 
-code in this README without having to install anything on your local environment. To start Azure 
-Cloud Shell: go to [https://shell.azure.com](https://shell.azure.com), or select the 
-Launch Cloud Shell button to open Cloud Shell in your browser.
+### Azure Cloud Shellの利用
 
-To run the code in this article in Azure Cloud Shell:
+または、Azure Cloud Shellを使用することもできます。Azureでは、ブラウザから使用できる対話型のシェル環境であるAzure Cloud Shellを用意しています。Cloud ShellでBashを使い、Azureサービスを操作できます。ローカル環境に何もインストールしなくても、Cloud Shellにプリインストールされているコマンドを使って、このREADMEのコードを実行できます。Azure Cloud Shellを起動するには [https://shell.azure.com](https://shell.azure.com) にアクセスするか、Launch Cloud Shellボタンを選択して、ブラウザでCloud Shellを開いてください。
 
-1. Start Cloud Shell.
+Azure Cloud Shellで本記事のコードを実行するには
 
-1. Select the Copy button on a code block to copy the code.
+1. Cloud Shellを起動
 
-1. Paste the code into the Cloud Shell session by selecting Ctrl+Shift+V on Windows and Linux or by selecting Cmd+Shift+V on macOS.
+1. コードブロックのコピーボタンを選択し、コードをコピー
 
-1. Select Enter to run the code.
+1. Windows と Linux では Ctrl+Shift+V を、macOS では Cmd+Shift+V を選択し、コードを Cloud Shell セッションに貼り付け
 
-## Install the Azure CLI extension
+1. Enterを選択して、コードを実行
 
-Install the Azure Spring  extension for the Azure CLI using the following command
+## Azure CLI拡張のインストール
+
+以下のコマンドを使用して、Azure CLI Azure Spring拡張をインストールします。
 
 ```bash
     az extension add --name spring
 ```
-Note - `spring` CLI extension `1.5.0` or later is a pre-requisite to enable the latest Java in-process agent for Application Insights. If you already have the CLI extension, you may need to upgrade to the latest using --
+注意 - Application Insights の最新の Java プロセス内エージェントを有効にするには、`spring` CLI extension `1.5.0` 以降が必要です。すでにCLI拡張をお持ちの場合は、以下のコマンドを使って最新のものにアップグレードする必要がある場合があります。
 
 ```bash
     az extension update --name spring
 ```
 
-## Clone and build the repo
+## リポジトリのクローン
 
-### Create a new folder and clone the sample app repository to your Azure Cloud account  
+新規ディレクトリを作成し、サンプルアプリのリポジトリをAzure Cloudアカウントにクローンします。
 
 ```bash
     mkdir source-code
     git clone https://github.com/azure-samples/spring-petclinic-microservices
 ```
 
-### Change directory and build the project
+クローンした先のディレクトリに移動し、プロジェクトをビルドしておきます。
 
 ```bash
     cd spring-petclinic-microservices
     mvn clean package -DskipTests
 ```
-This will take a few minutes.
+少々時間がかかります。
 
-## Unit-1 - Deploy and monitor Spring Boot apps
+## Unit 1 - Spring Bootアプリのデプロイと監視
 
-### Prepare your environment for deployments
+### デプロイのための環境の準備
 
-Create a bash script with environment variables by making a copy of the supplied template:
+テンプレートをコピーし、環境変数を持つBashスクリプトを作成します。
 
 ```bash
     cp .scripts/setup-env-variables-azure-template.sh .scripts/setup-env-variables-azure.sh
 ```
 
-Open `.scripts/setup-env-variables-azure.sh` and enter the following information:
+`.scripts/setup-env-variables-azure.sh` を開いて、以下の情報を設定します。
 
 ```bash
     export SUBSCRIPTION=subscription-id # customize this
     export RESOURCE_GROUP=resource-group-name # customize this
     ...
-    export SPRING_CLOUD_SERVICE=azure-spring-cloud-name # customize this
+    export SPRING_APPS=azure-spring-cloud-name # customize this
     ...
     export MYSQL_SERVER_NAME=mysql-servername # customize this
     ...
@@ -126,15 +126,15 @@ Open `.scripts/setup-env-variables-azure.sh` and enter the following information
     ...
 ```
 
-Then, set the environment:
+入力が完了したら保存し、環境に設定します。
 
 ```bash
     source .scripts/setup-env-variables-azure.sh
 ```
 
-### Login to Azure
+### Azureへのログイン
 
-Login to the Azure CLI and choose your active subscription. Be sure to choose the active subscription that is whitelisted for Azure Spring Apps
+Login to the Azure CLIにログインし、アクティブなサブスクリプションを選択します。アクティブなサブスクリプションではAzure Spring Appsが利用できるようになっていることを確認しておいてください。
 
 ```bash
     az login
@@ -142,41 +142,46 @@ Login to the Azure CLI and choose your active subscription. Be sure to choose th
     az account set --subscription ${SUBSCRIPTION}
 ```
 
-### Create Azure Spring App service instance
+### Azure Spring Appのインスタンスを作成
 
-Prepare a name for your Azure Spring App service.  The name must be between 4 and 32 characters long and can contain only lowercase letters, numbers, and hyphens.  The first character of the service name must be a letter and the last character must be either a letter or a number.
+Prepare a name for your Azure Spring Appインスタンスの名前を準備します。命名規則は以下の通りです。
 
-Create a resource group to contain your Azure Spring App service.
+- 4文字以上、32文字以内
+- アルファベットの小文字、数字、ハイフンのみを含む
+- 名前の先頭文字はアルファベット
+- 名前の末尾文字はアルファベットまたは数字
+
+リソースグループを作成し、Azure Spring Appsをその中に作成します。
 
 ```bash
     az group create --name ${RESOURCE_GROUP} \
         --location ${REGION}
 ```
 
-Create an instance of Azure Spring App.
+Azure Spring Appのインスタンスを作成します。
 
 ```bash
-    az spring create --name ${SPRING_CLOUD_SERVICE} \
+    az spring create --name ${SPRING_APPS} \
             --sku standard \
             --sampling-rate 100 \
             --resource-group ${RESOURCE_GROUP} \
             --location ${REGION}
 ```
 
-The service instance will take around five minutes to deploy.
+このインスタンスの作成完了までおよそ5分かかります。
 
-Set your default resource group name and cluster name using the following commands:
+デフォルトのリソースグループ、クラスター名、リージョンを以下のコマンドで設定します。
 
 ```bash
     az configure --defaults \
         group=${RESOURCE_GROUP} \
         location=${REGION} \
-        spring=${SPRING_CLOUD_SERVICE}
+        spring=${SPRING_APPS}
 ```
 
-### Create and configure Log Analytics Workspace
+### Log Analytics Workspaceの作成と設定
 
-Create a Log Analytics Workspace using Azure CLI:
+以下のAzure CLIコマンドでLog Analytics Workspaceを作成します。
 
 ```bash
     az monitor log-analytics workspace create \
@@ -190,18 +195,19 @@ Create a Log Analytics Workspace using Azure CLI:
         --query 'id' \
         --output tsv)
 
-    export SPRING_CLOUD_RESOURCE_ID=$(az spring show \
-        --name ${SPRING_CLOUD_SERVICE} \
+    export SPRING_APPS_RESOURCE_ID=$(az spring show \
+        --name ${SPRING_APPS} \
         --resource-group ${RESOURCE_GROUP} \
         --query 'id' \
         --output tsv)
 ```
 
-Setup diagnostics and publish logs and metrics from Spring Boot apps to Azure Log Analytics:
+診断設定を構成します。Spring Bootアプリからのとログ、メトリックのパブリッシュ先として、Azure Log Analytics Workspaceを指定します。
 
 ```bash
-    az monitor diagnostic-settings create --name "send-logs-and-metrics-to-log-analytics" \
-        --resource ${SPRING_CLOUD_RESOURCE_ID} \
+    az monitor diagnostic-settings create \
+        --name "send-logs-and-metrics-to-log-analytics" \
+        --resource ${SPRING_APPS_RESOURCE_ID} \
         --workspace ${LOG_ANALYTICS_RESOURCE_ID} \
         --logs '[
              {
@@ -241,53 +247,53 @@ Setup diagnostics and publish logs and metrics from Spring Boot apps to Azure Lo
            ]'
 ```
 
-### Load Spring Apps Config Server
+### Spring Apps Config Serverへのロード
 
-Use the `application.yml` in the root of this project to load configuration into the Config Server in Azure Spring Apps.
+このプロジェクトのルートにある `application.yml` を使って、Azure Spring AppsのConfig Serverに構成情報をロードします。
 
 ```bash
     az spring config-server set \
         --config-file application.yml \
-        --name ${SPRING_CLOUD_SERVICE}
+        --name ${SPRING_APPS}
 ```
 
-### Create applications in Azure Spring Apps
+### Azure Spring Appsでのアプリケーションの作成
 
-Create 5 apps.
+5個のアプリケーションを作成します。
 
 ```bash
     az spring app create --name ${API_GATEWAY} --instance-count 1 --assign-endpoint true \
-        --memory 2Gi \
+        --memory 3Gi \
         --runtime-version Java_17 \
-        --jvm-options='-Xms2048m -Xmx2048m'
+        --jvm-options='-XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6'
     
     az spring app create --name ${ADMIN_SERVER} --instance-count 1 --assign-endpoint true \
-        --memory 2Gi \
+        --memory 3Gi \
         --runtime-version Java_17 \
-        --jvm-options='-Xms2048m -Xmx2048m'
+        --jvm-options='-XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6'
     
     az spring app create --name ${CUSTOMERS_SERVICE} --instance-count 1 \
-        --memory 2Gi \
+        --memory 3Gi \
         --runtime-version Java_17 \
-        --jvm-options='-Xms2048m -Xmx2048m'
+        --jvm-options='-XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6'
     
     az spring app create --name ${VETS_SERVICE} --instance-count 1 \
-        --memory 2Gi \
+        --memory 3Gi \
         --runtime-version Java_17 \
-        --jvm-options='-Xms2048m -Xmx2048m'
+        --jvm-options='-XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6'
     
     az spring app create --name ${VISITS_SERVICE} --instance-count 1 \
-        --memory 2Gi \
+        --memory 3Gi \
         --runtime-version Java_17 \
-        --jvm-options='-Xms2048m -Xmx2048m'
+        --jvm-options='-XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6'
 ```
 
-### Create MySQL Database
+### MySQL Databaseの作成
 
-Create a MySQL database in Azure Database for MySQL.
+Azure Database for MySQL Flexible ServerにMySQL Databaseを作成します。
 
 ```bash
-    # create mysql server and provide access from Azure resources
+    # MySQL Serverを作成し、Azureリソースからのアクセスを許可する (Versionはお好みで)
     az mysql flexible-server create \
         --name ${MYSQL_SERVER_NAME} \
         --resource-group ${RESOURCE_GROUP} \
@@ -297,9 +303,10 @@ Create a MySQL database in Azure Database for MySQL.
         --public-access 0.0.0.0 \
         --tier Burstable \
         --sku-name Standard_B1ms \
-        --storage-size 32
+        --storage-size 32 \
+        --version 8.0.21
     
-    # allow access from your dev machine for testing
+    # テスト目的でのアクセスを許可するため、開発マシンのPublic IPを許可
     MY_IP=$(curl http://whatismyip.akamai.com)
     az mysql flexible-server firewall-rule create \
             --resource-group ${RESOURCE_GROUP} \
@@ -308,27 +315,27 @@ Create a MySQL database in Azure Database for MySQL.
             --start-ip-address ${MY_IP} \
             --end-ip-address ${MY_IP}
     
-    # create database
+    # データベースの作成
     az mysql flexible-server db create \
             --resource-group ${RESOURCE_GROUP} \
             --server-name ${MYSQL_SERVER_NAME} \
             --database-name ${MYSQL_DATABASE_NAME}
     
-    # increase connection timeout
+    # 接続タイムアウト時間の延長
     az mysql flexible-server parameter set \
         --resource-group ${RESOURCE_GROUP} \
         --server ${MYSQL_SERVER_NAME} \
         --name wait_timeout \
         --value 2147483
     
-    # set timezone   
+    # タイムゾーンの設定（オプション）   
     az mysql flexible-server parameter set \
         --resource-group ${RESOURCE_GROUP} \
         --server ${MYSQL_SERVER_NAME} \
         --name time_zone \
-        --value "US/Pacific"
+        --value "Asia/Tokyo"
     
-    # create managed identity for mysql. By assigning the identity to the mysql server, it will enable Azure AD authentication
+    # MySQL用Mangaed identityを作成し、このIdentityをMySQL Serverに割り当て、Azure AD認証を有効化します
     az identity create \
         --name ${MYSQL_IDENTITY} \
         --resource-group ${RESOURCE_GROUP} \
@@ -336,213 +343,228 @@ Create a MySQL database in Azure Database for MySQL.
 
     IDENTITY_ID=$(az identity show --name ${MYSQL_IDENTITY} --resource-group ${RESOURCE_GROUP} --query id -o tsv)
 
-    # Customer service connection
+    # Service Connectorの作成 1) Customers service
     az spring connection create mysql-flexible \
         --resource-group ${RESOURCE_GROUP} \
-        --service ${SPRING_CLOUD_SERVICE} \
+        --service ${SPRING_APPS} \
         --app ${CUSTOMERS_SERVICE} \
         --deployment default \
         --tg ${RESOURCE_GROUP} \
         --server ${MYSQL_SERVER_NAME} \
         --database ${MYSQL_DATABASE_NAME} \
         --system-identity mysql-identity-id=$IDENTITY_ID \
-        --client-type springboot
+        --client-type springboot \
+        --connection customers_service
 
-    # Vets service connection
+    # Service Connectorの作成 2) Vets service
     az spring connection create mysql-flexible \
         --resource-group ${RESOURCE_GROUP} \
-        --service ${SPRING_CLOUD_SERVICE} \
+        --service ${SPRING_APPS} \
         --app ${VETS_SERVICE} \
         --deployment default \
         --tg ${RESOURCE_GROUP} \
         --server ${MYSQL_SERVER_NAME} \
         --database ${MYSQL_DATABASE_NAME} \
         --system-identity mysql-identity-id=$IDENTITY_ID \
-        --client-type springboot 
+        --client-type springboot \
+        --connection vets_service
     
-    # Visits service connection
+    # Service Connectorの作成 3) Visits service
     az spring connection create mysql-flexible \
         --resource-group ${RESOURCE_GROUP} \
-        --service ${SPRING_CLOUD_SERVICE} \
+        --service ${SPRING_APPS} \
         --app ${VISITS_SERVICE} \
         --deployment default \
         --tg ${RESOURCE_GROUP} \
         --server ${MYSQL_SERVER_NAME} \
         --database ${MYSQL_DATABASE_NAME} \
         --system-identity mysql-identity-id=$IDENTITY_ID \
-        --client-type springboot 
+        --client-type springboot \
+        --connection visits_service
 ```
 
-### Deploy Spring Boot applications and set environment variables
+### Spring Bootアプリケーションのデプロイおよび環境変数の設定
 
-Deploy Spring Boot applications to Azure.
+Spring BootアプリケーションをAzureにデプロイします。
+JARファイルを作成後、`--artifact-path`オプションを指定してデプロイすることも可能ですが、今回は、事前にJARファイルを作成せず、 `--source-path` オプションを指定してソースファイルをアップロードし、Buildpackを使ってビルドすることにします。
 
 ```bash
 az spring app deploy \
         --resource-group ${RESOURCE_GROUP} \
-        --service ${SPRING_CLOUD_SERVICE} \
+        --service ${SPRING_APPS} \
         --name ${API_GATEWAY} \
-        --artifact-path ${API_GATEWAY_JAR} \
-        --jvm-options='-Xms2048m -Xmx2048m' \
-        --env SPRING_PROFILES_ACTIVE=passwordless 
+        --source-path \
+        --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
+        --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
+        --target-module spring-petclinic-api-gateway
 
 az spring app deploy \
         --resource-group ${RESOURCE_GROUP} \
-        --service ${SPRING_CLOUD_SERVICE} \
+        --service ${SPRING_APPS} \
         --name ${ADMIN_SERVER} \
-        --artifact-path ${ADMIN_SERVER_JAR} \
-        --jvm-options='-Xms2048m -Xmx2048m' \
-        --env SPRING_PROFILES_ACTIVE=passwordless 
+        --source-path \
+        --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
+        --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
+        --target-module spring-petclinic-admin-server
 
 az spring app deploy \
         --resource-group ${RESOURCE_GROUP} \
-        --service ${SPRING_CLOUD_SERVICE} \
+        --service ${SPRING_APPS} \
         --name ${CUSTOMERS_SERVICE} \
-        --artifact-path ${CUSTOMERS_SERVICE_JAR} \
-        --jvm-options='-Xms2048m -Xmx2048m' \
-        --env SPRING_PROFILES_ACTIVE=passwordless 
+        --source-path \
+        --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
+        --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
+        --target-module spring-petclinic-customers-service
 
 az spring app deploy \
         --resource-group ${RESOURCE_GROUP} \
-        --service ${SPRING_CLOUD_SERVICE} \
+        --service ${SPRING_APPS} \
         --name ${VETS_SERVICE} \
-        --artifact-path ${VETS_SERVICE_JAR} \
-        --jvm-options='-Xms2048m -Xmx2048m' \
-        --env SPRING_PROFILES_ACTIVE=passwordless 
+        --source-path \
+        --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
+        --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
+        --target-module spring-petclinic-vets-service
 
 az spring app deploy \
         --resource-group ${RESOURCE_GROUP} \
-        --service ${SPRING_CLOUD_SERVICE} \
+        --service ${SPRING_APPS} \
         --name ${VISITS_SERVICE} \
-        --artifact-path ${VISITS_SERVICE_JAR} \
-        --jvm-options='-Xms2048m -Xmx2048m' \
-        --env SPRING_PROFILES_ACTIVE=passwordless 
+        --source-path \
+        --jvm-options="-XX:+UseG1GC -XX:+UseStringDeduplication -XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6 -XX:ActiveProcessorCount=1" \
+        --env SPRING_PROFILES_ACTIVE=passwordless BP_JVM_VERSION=17 \
+        --target-module spring-petclinic-visits-service
 ```
+
+完了したら、以下のコマンドでAPI GatewayのURLを確認してください。
 
 ```bash
-    az spring app show --name ${API_GATEWAY} --query properties.url --output tsv
+    echo $(az spring app show --name ${API_GATEWAY} --query properties.url --output tsv)
 ```
 
-Navigate to the URL provided by the previous command to open the Pet Clinic application.
+上記コマンドで取得したAPI GatewayのURLをブラウザで開くと、Petclinicアプリケーションにアクセスできるはずです。
     
 ![](./media/petclinic.jpg)
 
-### Monitor Spring Boot applications
+### Spring Bootアプリケーションの監視
 
-#### Use the Petclinic application and make a few REST API calls
+#### Petclinicアプリを使い、REST APIを呼び出す
 
-Open the Petclinic application and try out a few tasks - view pet owners and their pets, 
-vets, and schedule pet visits:
-
-```bash
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/
-```
-
-You can also `curl` the REST API exposed by the Petclinic application. The admin REST
-API allows you to create/update/remove items in Pet Owners, Pets, Vets and Visits.
-You can run the following curl commands:
+Open the Petclinicアプリケーションを開いて、ペットオーナーやペット、獣医師、来院の予約を確認します。
 
 ```bash
-curl -X GET https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners
-curl -X GET https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners/4
-curl -X GET https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners/ 
-curl -X GET https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/petTypes
-curl -X GET https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners/3/pets/4
-curl -X GET https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners/6/pets/8/
-curl -X GET https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/vet/vets
-curl -X GET https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/visit/owners/6/pets/8/visits
-curl -X GET https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/visit/owners/6/pets/8/visits
+open https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/
 ```
 
-#### Get the log stream for API Gateway and Customers Service
+`curl` でPetclinicアプリケーションが公開しているREST APIを呼び出すこともできます。管理用REST APIを使って、ペットオーナー、ペット、獣医師、来院予約を作成・更新・削除できます。
+以下のcurlコマンドを実行できます。
 
-Use the following command to get the latest 100 lines of app console logs from Customers Service.
+```bash
+curl -X GET https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners
+curl -X GET https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners/4
+curl -X GET https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners/ 
+curl -X GET https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/customer/petTypes
+curl -X GET https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners/3/pets/4
+curl -X GET https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/customer/owners/6/pets/8/
+curl -X GET https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/vet/vets
+curl -X GET https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/visit/owners/6/pets/8/visits
+curl -X GET https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/visit/owners/6/pets/8/visits
+```
+
+#### API GatewayとCustomer Serviceのログストリームを確認
+
+以下のコマンドを使って、Customer Serviceから出力されたアプリケーションコンソールログのうち、最新の100行を表示します。
 
 ```bash
 az spring app logs -n ${CUSTOMERS_SERVICE} --lines 100
 ```
-By adding a `-f` parameter you can get real-time log streaming from the app. Try log streaming for the API Gateway app.
+
+`-f` パラメータを追加すると、アプリケーションからのリアルタイム・ログストリームを確認できます。API Gatewayアプリケーションのログストリームを確認してみましょう。
+
 ```bash
 az spring app logs -n ${API_GATEWAY} -f
 ```
-You can use `az spring app logs -h` to explore more parameters and log stream functionalities.
 
-#### Open Actuator endpoints for API Gateway and Customers Service apps
+`az spring app logs -h` を利用すると、パラメータやログストリーム機能の詳細を確認できます。
 
-Spring Boot includes a number of additional features to help you monitor and manage your application when you push it to production ([Spring Boot Actuator: Production-ready Features](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#actuator)). You can choose to manage and monitor your application by using HTTP endpoints or with JMX. Auditing, health, and metrics gathering can also be automatically applied to your application.
+#### API GatewayとCustomer Serviceの両アプリのActuatorエンドポイントをオープンする
 
-Actuator endpoints let you monitor and interact with your application. By default, Spring Boot application exposes `health` and `info` endpoints to show arbitrary application info and health information. Apps in this project are pre-configured to expose all the Actuator endpoints.
+Spring Bootには、本運用環境にアプリケーションをデプロイした際のアプリケーションの監視・管理に役立つ数多くの追加機能([Spring Boot Actuator: Production-ready Features](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#actuator))が含まれています。アプリケーションの管理・監視は、HTTPエンドポイントまたはJMXを選択できます。また、監査、ヘルス、メトリクス収集を、アプリケーションに自動的に適用できます。
 
-You can try them out by opening the following app actuator endpoints in a browser:
+Actuatorエンドポイントを使うと、アプリケーションの監視および対話が可能です。デフォルトでは、Spring Bootアプリケーションは `health` と `info` エンドポイントを公開し、任意のアプリケーション情報とヘルス情報を表示します。このプロジェクトのアプリケーションは、すべてのActuatorエンドポイントを公開するようにあらかじめ設定済みです。
+
+以下で示すアプリのActuatorエンドポイントをブラウザで開いて確認できます。
 
 ```bash
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/actuator/
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/actuator/env
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/actuator/configprops
+echo https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/actuator/
+echo https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/actuator/env
+echo https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/actuator/configprops
 
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator/env
-open https://${SPRING_CLOUD_SERVICE}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator/configprops
+echo https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator
+echo https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator/env
+echo https://${SPRING_APPS}-${API_GATEWAY}.azuremicroservices.io/api/customer/actuator/configprops
 ```
 
-#### Start monitoring Spring Boot apps and dependencies - in Application Insights
+#### Application Insightsを使った、Spring Bootアプリとその依存関係の監視
 
-Open the Application Insights created by Azure Spring Apps and start monitoring Spring Boot applications. You can find the Application Insights in the same Resource Group where
-you created an Azure Spring Apps service instance.
+Azure Spring Appsで作成したApplication Insightsを開き、Spring Bootアプリケーションの監視を開始します。
+アプリケーションインサイトは、Azure Spring Appsのサービスインスタンスを作成したリソースグループと同じリソースグループにあります。
 
-Navigate to the `Application Map` blade:
+`Application Map` ブレード
 ![](./media/distributed-tracking-new-ai-agent.jpg)
 
-Navigate to the `Performance` blade:
+`Performance` ブレード
 ![](./media/petclinic-microservices-performance.jpg)
 
-Navigate to the `Performance/Dependencies` blade - you can see the performance number for dependencies, 
-particularly SQL calls:
+`Performance/Dependencies` ブレード
+
+依存関係に関するパフォーマンスに関する数値を確認できます。オレンジで囲んだ部分はSQL呼び出しのパフォーマンスです。
 ![](./media/petclinic-microservices-insights-on-dependencies.jpg)
 
-Click on a SQL call to see the end-to-end transaction in context:
+Click on a SQL呼び出しをクリックすると、コンテキストのEnd to Endのトランザクションを確認できます。
 ![](./media/petclinic-microservices-end-to-end-transaction-details.jpg)
 
-Navigate to the `Failures/Exceptions` blade - you can see a collection of exceptions:
+`Failures/Exceptions`ブレード
+
+例外のコレクションを確認できます。
 ![](./media/petclinic-microservices-failures-exceptions.jpg)
 
-Click on an exception to see the end-to-end transaction and stacktrace in context:
+例外をクリックすると、コンテキストのEnd to Endのトランザクションならびにスタックトレースを確認できます。
 ![](./media/end-to-end-transaction-details.jpg)
 
-Navigate to the `Metrics` blade - you can see metrics contributed by Spring Boot apps, 
-Spring Cloud modules, and dependencies. 
-The chart below shows `gateway-requests` (Spring Cloud Gateway), `hikaricp_connections`
- (JDBC Connections) and `http_client_requests`.
- 
+`Metrics` ブレード
+
+Spring Bootアプリが提供するメトリクス、Spring Cloudのモジュール、および依存関係を確認できます。
+下図では、`gateway-requests` (Spring Cloud Gateway)、`hikaricp_connections` (JDBC接続) と`http_client_requests` が確認できます。
 ![](./media/petclinic-microservices-metrics.jpg)
 
-Spring Boot registers a lot number of core metrics: JVM, CPU, Tomcat, Logback... 
-The Spring Boot auto-configuration enables the instrumentation of requests handled by Spring MVC.
-All those three REST controllers `OwnerResource`, `PetResource` and `VisitResource` have been instrumented by the `@Timed` Micrometer annotation at class level.
+Spring Bootでは、JVM、CPU、Tomcat、Logbackなどの多くのコアメトリクスが登録されています。
+Spring Bootの自動設定により、Spring MVCが処理するリクエストのインスツルメンテーションが可能になります。
+`OwnerResource`、`PetResource`、`VisitResource` というこの3つのRESTコントローラは、クラスレベルの `@Timed` Micrometerアノテーションによってインストルメンテーションされています。
 
-* `customers-service` application has the following custom metrics enabled:
+* `customers-service` アプリケーションでは、以下のカスタムメトリクスが有効化されています。
   * @Timed: `petclinic.owner`
   * @Timed: `petclinic.pet`
-* `visits-service` application has the following custom metrics enabled:
+* `visits-service` アプリケーションでは、以下のカスタムメトリクスが有効化されています。
   * @Timed: `petclinic.visit`
 
-You can see these custom metrics in the `Metrics` blade:
+`Metrics` ブレードでこれらのカスタムメトリクスを確認できます。
 ![](./media/petclinic-microservices-custom-metrics.jpg)
 
-You can use the Availability Test feature in Application Insights and monitor
-the availability of applications:
+Application Insightsの可用性テスト機能を利用し、アプリケーションの可用性を監視できます。
 ![](./media/petclinic-microservices-availability.jpg)
 
-Navigate to the `Live Metrics` blade - you can see live metrics on screen with low latencies < 1 second:
+`Live Metrics` ブレード
+
+1秒以下の低レイテンシでライブメトリクスを確認できます。
 ![](./media/petclinic-microservices-live-metrics.jpg)
 
-#### Start monitoring Petclinic logs and metrics in Azure Log Analytics
+#### Azure Log AnalyticsでPetClinicのログとメトリクスを監視する
 
-Open the Log Analytics that you created - you can find the Log Analytics in the same Resource Group where you created an Azure Spring Apps service instance.
+Azure Spring Appsインスタンスと同じリソースグループに作成したLog Analytics Workspaceを開きます。
 
-In the Log Analyics page, selects `Logs` blade and run any of the sample queries supplied below for Azure Spring Apps.
+Log Analyicsのページで、`Logs` ブレードをクリックし、以下のAzure Spring Apps用のサンプルクエリを実行します。
 
-Type and run the following Kusto query to see application logs:
+以下のKustoクエリを実行し、アプリケーションログを確認します。
 
 ```sql
     AppPlatformLogsforSpring 
@@ -551,7 +573,8 @@ Type and run the following Kusto query to see application logs:
     | sort by TimeGenerated
 ```
 
-Type and run the following Kusto query to see `customers-service` application logs:
+以下のKustoクエリを実行し、 `customers-service` アプリケーションログを確認します。
+
 ```sql
     AppPlatformLogsforSpring 
     | where AppName has "customers"
@@ -559,7 +582,8 @@ Type and run the following Kusto query to see `customers-service` application lo
     | sort by TimeGenerated
 ```
 
-Type and run the following Kusto query  to see errors and exceptions thrown by each app:
+以下のKustoクエリを実行し、各アプリケーションがスローした例外やエラーを確認します。
+
 ```sql
     AppPlatformLogsforSpring 
     | where Log contains "error" or Log contains "exception"
@@ -569,15 +593,16 @@ Type and run the following Kusto query  to see errors and exceptions thrown by e
     | render piechart
 ```
 
-Type and run the following Kusto query to see all in the inbound calls into Azure Spring Apps:
+以下のKustoクエリを実行し、Azure Spring Appsに対するすべてのインバウンドリクエストを確認します。
+
 ```sql
     AppPlatformIngressLogs
     | project TimeGenerated, RemoteAddr, Host, Request, Status, BodyBytesSent, RequestTime, ReqId, RequestHeaders
     | sort by TimeGenerated
 ```
 
-Type and run the following Kusto query to see all the logs from the managed Spring Cloud
-Config Server managed by Azure Spring Apps:
+以下のKustoクエリを実行し、Azure Spring Appsが管理するマネージドSpring Cloud Config Serverからのすべてのログを確認します。
+
 ```sql
     AppPlatformSystemLogs
     | where LogType contains "ConfigServer"
@@ -585,8 +610,8 @@ Config Server managed by Azure Spring Apps:
     | sort by TimeGenerated
 ```
 
-Type and run the following Kusto query to see all the logs from the managed Spring Cloud
-Service Registry managed by Azure Spring Apps:
+以下のKustoクエリを実行し、Azure Spring Appsが管理するマネージドSpring Cloud Service Registryからのすべてのログを確認します。
+
 ```sql
     AppPlatformSystemLogs
     | where LogType contains "ServiceRegistry"
@@ -594,54 +619,63 @@ Service Registry managed by Azure Spring Apps:
     | sort by TimeGenerated
 ```
 
-## Unit-2 - Automate deployments using GitHub Actions
+## Unit-2 - GitHub Actionsを使ったデプロイの自動化
 
-### Prerequisites
+### 前提条件
 
-To get started with deploying this sample app from GitHub Actions, please:
-1. Complete the sections above with your MySQL, Azure Spring Apps instances and apps created.
-2. Fork this repository and turn on GitHub Actions in your fork
+このUnitは、事前に以下が終了している必要があります。
 
-### Prepare GitHub Federated Credentials
+1. MySQL、Azure Spring Appsインスタンス、アプリを作成した状態で、Unit 1を完了していること。
+2. このリポジトリをフォークし、フォーク先でGitHub Actionsを有効にしていること。
 
-You can follow the steps described [here](https://learn.microsoft.com/en-us/azure/developer/github/connect-from-azure) to create a GitHub Federated Credentials in Azure Active Directory.
+### GitHubのFederated Credentialsの準備
 
-Create an Azure Active Directory application:
+[ここ](https://learn.microsoft.com/azure/developer/github/connect-from-azure) に記載の手順で、Azure Active DirectoryにGitHub Federated Credentialsを作成できます。
+
+Azure Active Directoryアプリケーションを作成します。以下では`github-petclinic-actions`という名前のアプリケーションを作成していますが、できればユニークになるような名前にすることを強く推奨します。
 
 ```bash
 AZURE_CLIENT_ID=$(az ad app create --display-name github-petclinic-actions --query appId --output tsv)
 GITHUB_OBJECTID=$(az ad app show --id $AZURE_CLIENT_ID --query id --output tsv)
 ```
-```
 
-Create a service principal for the application:
+アプリケーションのservice principalを作成します。
 
 ```bash
 ASSIGNEE_OBJECTID=$(az ad sp create --id $AZURE_CLIENT_ID --query id --output tsv)
 ```
 
-Create a service principle with enough scope/role to manage your Azure Spring Apps instance. Following example assigns contributor role on the resource group hosting the infrastructure:
+Azure Spring Appsインスタンスを管理するのに十分なスコープとロールを持つサービスプリンシパルを作成します。以下の例では、インフラストラクチャをホストするリソースグループにcontributor (共同管理者) ロールを割り当てています。
 
 ```bash
-az role assignment create --role contributor --subscription ${SUBSCRIPTION} --assignee-object-id  $ASSIGNEE_OBJECTID --assignee-principal-type ServicePrincipal --scope /subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCE_GROUP}
+az role assignment create \
+  --role contributor \
+  --subscription ${SUBSCRIPTION} \
+  --assignee-object-id  ${ASSIGNEE_OBJECTID} \
+  --assignee-principal-type ServicePrincipal \
+  --scope /subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCE_GROUP}
 ```
 
-Add federated credentials for GitHub in Azure AD.
+Azure ADにGitHubのfederated credentialsを追加します。
 
 ```bash
-az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/<GITHUB_OBJECTID>/federatedIdentityCredentials' --body '{"name":"<CREDENTIAL-NAME>","issuer":"https://token.actions.githubusercontent.com","subject":"repo:<OWNER>/spring-petclinic-microservices:ref:refs/heads/azure","description":"Testing","audiences":["api://AzureADTokenExchange"]}'
+az rest --method POST \
+  --uri 'https://graph.microsoft.com/beta/applications/<GITHUB_OBJECTID>/federatedIdentityCredentials' \
+  --body '{"name":"<CREDENTIAL-NAME>","issuer":"https://token.actions.githubusercontent.com","subject":"repo:<OWNER>/spring-petclinic-microservices:ref:refs/heads/azure","description":"チュートリアル","audiences":["api://AzureADTokenExchange"]}'
 ```
 
-In the previous command, replace the following values:
-CREDENTIAL-NAME: The name of the credential. This is the name that will appear in AAD portal.
-GITHUB_OBJECTID: The object ID of the service principal created in the previous step.
-OWNER: The owner of the GitHub repository hosting the code. So, if you forked the repository, the owner is your GitHub username.
+上記コマンドで置き換える値は以下の通りです。
+| Item | Description |
+|---|----|
+|GITHUB_OBJECTID|前のステップで作成したサービスプリンシパルのオブジェクトID |
+|CREDENTIAL-NAME|クレデンシャルの名前。Azure ADポータルに表示される名前 |
+|OWNER|コードをホストしている GitHub リポジトリの所有者。リポジトリをフォークした場合、オーナーはGitHubのユーザー名。 |
 
 ```bash
-az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/00000000-0000-0000-0000-000000000000/federatedIdentityCredentials' --body '{"name":"github-petclinic-actions","issuer":"https://token.actions.githubusercontent.com","subject":"repo:Azure-Samples/spring-petclinic-microservices:ref:refs/heads/azure","description":"Testing","audiences":["api://AzureADTokenExchange"]}'
+az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/00000000-0000-0000-0000-000000000000/federatedIdentityCredentials' --body '{"name":"github-petclinic-actions","issuer":"https://token.actions.githubusercontent.com","subject":"repo:Azure-Samples/spring-petclinic-microservices:ref:refs/heads/azure","description":"チュートリアル","audiences":["api://AzureADTokenExchange"]}'
 ```
 
-The results in the command line will look like this:
+コマンド実行結果は以下のようになるはずです。
 
 ```bash
 {
@@ -649,7 +683,7 @@ The results in the command line will look like this:
   "audiences": [
     "api://AzureADTokenExchange"
   ],
-  "description": "Testing",
+  "description": "チュートリアル",
   "id": "000000000-0000-0000-0000-000000000000",
   "issuer": "https://token.actions.githubusercontent.com",
   "name": "github-petclinic-actions",
@@ -657,29 +691,34 @@ The results in the command line will look like this:
 }
 ```
 
-It will look like this in Azure AD portal:
+Azure Portalから見ると以下のようになっているはずです。
 ![Federated Credentials](./media/azuread-github-federated-credential.png)
 
-> [!NOTE] It can take few minutes to refresh the federated credentials in Azure AD portal.
+> 注意: Azure ADポータルでfederated credentialsを更新するのに数分かかる場合があります。
 
-### Prepare GitHub Secrets
+### GitHubシークレットの準備
 
-The actions expects the following secrets to be set in your GitHub repository:
+actionsでは以下のシークレットをGitHubリポジトリに保存されていることを想定しています。
 
-* AZURE_TENANT_ID: The tenant ID of the Azure subscription hosting the Azure Spring Apps instance.
-* AZURE_SUBSCRIPTION_ID: The subscription ID of the Azure subscription hosting the Azure Spring Apps instance.
-* AZURE_CLIENT_ID: The client ID of the Azure Active Directory application created in the previous step.
-* RESOURCE_GROUP: The resource group hosting the Azure Spring Apps instance.
-* SPRING_APPS_SERVICE_NAME: The name of the Azure Spring Apps instance.
+| Item | Description |
+|---|----|
+|AZURE_TENANT_ID|Azure Spring AppsインスタンスをホストしているAzureサブスクリプションのテナントID|
+|AZURE_SUBSCRIPTION_ID|Azure Spring AppsインスタンスをホストしているAzureサブスクリプションのサブスクリプションID|
+|AZURE_CLIENT_ID|前のステップで作成したAzure ADアプリケーションのクライアントID|
+|RESOURCE_GROUP|Azure Spring Appsインスタンスをホストしているリソースグループ|
+|SPRING_APPS_SERVICE_NAME|Azure Spring Appsインスタンスの名前|
 
-As you can see, there are not real confidential values, as even if someone gets access to them, they can't do anything with them. They can be replaced by environment variables.
+見ての通り、誰かがアクセスしても何もできないので、本当の機密値は存在しません。これらの値は環境変数で置換できます。
 
-You will see GitHub Actions triggered to build and deploy all the apps in the repo to your Azure Spring Apps instance.
+GitHub Actionsが起動し、リポジトリにあるすべてのアプリをビルドしてAzure Spring Appsのインスタンスにデプロイするのを確認しましょう。
+
 ![](./media/automate-deployments-using-github-actions.png)
 
-## Unit-3 - Enable Managed Identities for applications in Azure Spring Apps
+## Unit-3 - Azure Spring AppsのアプリケーションのManaged Identitiesを有効化
 
-Enable System Assigned Identities for applications and export identities to environment.
+このUnitは、すでにService Connectorで有効化されているので、実施不要です。
+
+システム割り当てのManaged Identityを各アプリケーションで有効化し、各Managed IdentityのPrincipal IDを環境変数に設定します。
 
 ```bash
     az spring app identity assign --name ${CUSTOMERS_SERVICE}
@@ -688,31 +727,31 @@ Enable System Assigned Identities for applications and export identities to envi
     az spring app identity assign --name ${VETS_SERVICE}
     export VETS_SERVICE_IDENTITY=$(az spring app show --name ${VETS_SERVICE} --query 'identity.principalId' --output tsv)
     
-    az spring app identity assign --name --name ${VISITS_SERVICE}
+    az spring app identity assign --name ${VISITS_SERVICE}
     export VISITS_SERVICE_IDENTITY=$(az spring app show --name ${VISITS_SERVICE} --query 'identity.principalId' --output tsv)
 ```
 
-### Activate applications to use passwordless access to MySql
+### MySQLへのパスワードレス接続を使うようにアプリケーションを構成する
 
-Configuration repo contains a profile for passwordless access to MySql. To activate it, we need to add the following environment variable `SPRING_PROFILES_ACTIVE=passwordless`
+MySQLにパスワードレス接続するためのプロファイルが構成リポジトリにあります。有効化するには、 `SPRING_PROFILES_ACTIVE=passwordless` という環境変数を各アプリケーションで設定する必要があります。
 
 ```bash
     az spring app update --name ${CUSTOMERS_SERVICE} \
-        --jvm-options='-Xms2048m -Xmx2048m' \
+        --jvm-options='-XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6' \
         --env SPRING_PROFILES_ACTIVE=passwordless
 
     az spring app update --name ${VETS_SERVICE} \
-        --jvm-options='-Xms2048m -Xmx2048m' \
+        --jvm-options='-XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6' \
         --env SPRING_PROFILES_ACTIVE=passwordless
         
     az spring app update --name ${VISITS_SERVICE} \
-        --jvm-options='-Xms2048m -Xmx2048m' \
+        --jvm-options='-XX:InitialRAMPercentage=50.0 -XX:MinRAMPercentage=66.6 -XX:MaxRAMPercentage=66.6' \
         --env SPRING_PROFILES_ACTIVE=passwordless
 ```
 
-## Next Steps
+## さらに学ぶのであれば
 
-In this quickstart, you've deployed an existing Spring Boot-based app using Azure CLI, Terraform and GitHub Actions. To learn more about Azure Spring Apps, go to:
+このクイックスタートでは、Azure CLI、Terraform、GitHub Actionsを使って、既存のSpring Bootベースのアプリをデプロイしました。Azure Spring Appsの詳細を学ぶには、以下を参照してください。
 
 - [Azure Spring Apps](https://azure.microsoft.com/products/spring-apps/)
 - [Azure Spring Apps docs](https://learn.microsoft.com/azure/developer/java/)
@@ -724,8 +763,8 @@ In this quickstart, you've deployed an existing Spring Boot-based app using Azur
 
 ## Credits
 
-This Spring microservices sample is forked from 
-[spring-petclinic/spring-petclinic-microservices](https://github.com/spring-petclinic/spring-petclinic-microservices) - see [Petclinic README](./README-petclinic.md). 
+このSpringマイクロサービスのサンプルは
+[spring-petclinic/spring-petclinic-microservices](https://github.com/spring-petclinic/spring-petclinic-microservices)からフォークしたものです。詳細は [Petclinic README](./README-petclinic.md) をご覧ください。
 
 ## Contributing
 
