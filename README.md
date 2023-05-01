@@ -632,7 +632,7 @@ Log Analyicsのページで、`Logs` ブレードをクリックし、以下のA
 
 [ここ](https://learn.microsoft.com/azure/developer/github/connect-from-azure) に記載の手順で、Azure Active DirectoryにGitHub Federated Credentialsを作成できます。
 
-Azure Active Directoryアプリケーションを作成します。
+Azure Active Directoryアプリケーションを作成します。以下では`github-petclinic-actions`という名前のアプリケーションを作成していますが、できればユニークになるような名前にすることを強く推奨します。
 
 ```bash
 AZURE_CLIENT_ID=$(az ad app create --display-name github-petclinic-actions --query appId --output tsv)
@@ -651,7 +651,7 @@ Azure Spring Appsインスタンスを管理するのに十分なスコープと
 az role assignment create \
   --role contributor \
   --subscription ${SUBSCRIPTION} \
-  --assignee-object-id  $ASSIGNEE_OBJECTID \
+  --assignee-object-id  ${ASSIGNEE_OBJECTID} \
   --assignee-principal-type ServicePrincipal \
   --scope /subscriptions/${SUBSCRIPTION}/resourceGroups/${RESOURCE_GROUP}
 ```
@@ -667,9 +667,9 @@ az rest --method POST \
 上記コマンドで置き換える値は以下の通りです。
 | Item | Description |
 |---|----|
-|CREDENTIAL-NAME|クレデンシャルの名前。Azure ADポータルに表示される名前です。|
-|GITHUB_OBJECTID|前のステップで作成したサービスプリンシパルのオブジェクトIDです。|
-|OWNER|コードをホストしている GitHub リポジトリの所有者です。リポジトリをフォークした場合、オーナーはGitHubのユーザー名です。|
+|GITHUB_OBJECTID|前のステップで作成したサービスプリンシパルのオブジェクトID |
+|CREDENTIAL-NAME|クレデンシャルの名前。Azure ADポータルに表示される名前 |
+|OWNER|コードをホストしている GitHub リポジトリの所有者。リポジトリをフォークした場合、オーナーはGitHubのユーザー名。 |
 
 ```bash
 az rest --method POST --uri 'https://graph.microsoft.com/beta/applications/00000000-0000-0000-0000-000000000000/federatedIdentityCredentials' --body '{"name":"github-petclinic-actions","issuer":"https://token.actions.githubusercontent.com","subject":"repo:Azure-Samples/spring-petclinic-microservices:ref:refs/heads/azure","description":"Testing","audiences":["api://AzureADTokenExchange"]}'
