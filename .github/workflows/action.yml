@@ -65,7 +65,7 @@ jobs:
         # runtime-version: Java_17
         cpu: 1
         memory: 3Gi
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless BP_JVM_VERSION=17
+        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
     
     - name: Deploy admin-server
       uses:  azure/spring-apps-deploy@v1      
@@ -80,7 +80,7 @@ jobs:
         # runtime-version: Java_17
         cpu: 1
         memory: 3Gi
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless BP_JVM_VERSION=17
+        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
 
     - name: Deploy customers-service
       uses: azure/spring-apps-deploy@v1      
@@ -95,7 +95,7 @@ jobs:
         # runtime-version: Java_17
         cpu: 1
         memory: 3Gi
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless BP_JVM_VERSION=17
+        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
 
     - name: Deploy vets-service
       uses: azure/spring-apps-deploy@v1      
@@ -110,7 +110,7 @@ jobs:
         # runtime-version: Java_17
         cpu: 1
         memory: 3Gi
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless BP_JVM_VERSION=17
+        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
 
     - name: Deploy visits-service
       uses: azure/spring-apps-deploy@v1
@@ -125,4 +125,4 @@ jobs:
         # runtime-version: Java_17
         cpu: 1
         memory: 3Gi
-        environment-variables: -SPRING_PROFILES_ACTIVE passwordless BP_JVM_VERSION=17
+        environment-variables: -SPRING_PROFILES_ACTIVE passwordless
