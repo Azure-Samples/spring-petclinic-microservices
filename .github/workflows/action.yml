@@ -50,7 +50,7 @@ jobs:
 
     - name: build with maven
       run: |
-        mvn -B package -DskipTests
+        mvn -B clean package -DskipTests
 
     - name: Deploy api-gateway
       uses: azure/spring-apps-deploy@v1
