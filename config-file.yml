@@ -4,7 +4,4 @@ spring:
       server:
         git:
           uri: https://github.com/azure-samples/spring-petclinic-microservices-config
-        native:
-          search-locations: classpath:.
-  profiles:
-    active: native
+          default-label: master

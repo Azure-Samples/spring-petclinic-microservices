@@ -7,25 +7,30 @@ spring:
     gateway:
       routes:
         - id: vets-service
-          uri: http://vets-service
+          uri: lb://vets-service
           predicates:
             - Path=/api/vet/**
           filters:
             - StripPrefix=2
         - id: visits-service
-          uri: http://visits-service
+          uri: lb://visits-service
           predicates:
             - Path=/api/visit/**
           filters:
             - StripPrefix=2
         - id: customers-service
-          uri: http://customers-service
+          uri: lb://customers-service
           predicates:
             - Path=/api/customer/**
           filters:
             - StripPrefix=2
-
-
+---
+server:
+  port: 8080
+spring:
+  config:
+    activate:
+      on-profile: default
 
 ---
 spring:

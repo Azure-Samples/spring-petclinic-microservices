@@ -96,7 +96,7 @@ Note - `spring` CLI extension `1.5.0` or later is a pre-requisite to enable the 
 
 ```bash
     cd spring-petclinic-microservices
-    mvn clean package -DskipTests
+    ./mvnw clean package -DskipTests
 ```
 This will take a few minutes.
 
@@ -243,11 +243,11 @@ Setup diagnostics and publish logs and metrics from Spring Boot apps to Azure Lo
 
 ### Load Spring Apps Config Server
 
-Use the `application.yml` in the root of this project to load configuration into the Config Server in Azure Spring Apps.
+Use the `config-file.yml` in the root of this project to load configuration into the Config Server in Azure Spring Apps.
 
 ```bash
     az spring config-server set \
-        --config-file application.yml \
+        --config-file config-file.yml \
         --name ${SPRING_CLOUD_SERVICE}
 ```
 
@@ -346,7 +346,8 @@ Create a MySQL database in Azure Database for MySQL.
         --server ${MYSQL_SERVER_NAME} \
         --database ${MYSQL_DATABASE_NAME} \
         --system-identity mysql-identity-id=$IDENTITY_ID \
-        --client-type springboot
+        --client-type springboot \
+        --yes
 
     # Vets service connection
     az spring connection create mysql-flexible \
@@ -358,7 +359,8 @@ Create a MySQL database in Azure Database for MySQL.
         --server ${MYSQL_SERVER_NAME} \
         --database ${MYSQL_DATABASE_NAME} \
         --system-identity mysql-identity-id=$IDENTITY_ID \
-        --client-type springboot 
+        --client-type springboot \
+        --yes
     
     # Visits service connection
     az spring connection create mysql-flexible \
@@ -370,7 +372,8 @@ Create a MySQL database in Azure Database for MySQL.
         --server ${MYSQL_SERVER_NAME} \
         --database ${MYSQL_DATABASE_NAME} \
         --system-identity mysql-identity-id=$IDENTITY_ID \
-        --client-type springboot 
+        --client-type springboot \
+        --yes
 ```
 
 ### Deploy Spring Boot applications and set environment variables
