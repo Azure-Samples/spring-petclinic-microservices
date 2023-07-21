@@ -84,6 +84,10 @@
         </profile>
 
         <profile>
+            <!--
+            This profile file is used to configure and deploy applications to the Azure Spring Apps, only the following five applications are involved.
+            It's used for quickstart doc: https://learn.microsoft.com/azure/spring-apps/quickstart-deploy-microservice-apps
+            -->
             <id>spring-apps</id>
             <modules>
                 <module>spring-petclinic-admin-server</module>
