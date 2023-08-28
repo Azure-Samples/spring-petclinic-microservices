@@ -21,6 +21,14 @@ Let's jump in and get this up and running in Azure. When you are finished, you w
 
 ![Spring Petclinic Application](media/petclinic.jpg)
 
+Before delving into the step-by-step execution of the application, you can simply click the Deploy to Azure button. This will instantly deploy the app to Azure Spring Apps.
+
+| Deploy to Azure Spring Apps | |
+|--|--|
+| Consumption plan   |Not support|
+| Basic/Standard plan|Not support|
+| Enterprise plan    |[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure-Samples%2Fspring-petclinic-microservices%2Fazure%2Finfra%2Fazuredeploy.json)|
+
 ## Run with AZD
 
 ### Prerequisites
