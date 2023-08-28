@@ -82,7 +82,38 @@
                 <module>spring-petclinic-api-gateway</module>
             </modules>
         </profile>
-
+        <profile>
+            <!--
+            This profile file is used to release jar files to GitHub release, it's required to download the jar for Azure Spring Apps deployment.
+            It's used for quickstart ARM template: https://github.com/Azure/azure-quickstart-templates/tree/master/quickstarts/microsoft.appplatform/microservice-apps-enterprise-plan
+            -->
+            <id>release</id>
+            <modules>
+                <module>spring-petclinic-admin-server</module>
+                <module>spring-petclinic-customers-service</module>
+                <module>spring-petclinic-vets-service</module>
+                <module>spring-petclinic-visits-service</module>
+                <module>spring-petclinic-config-server</module>
+                <module>spring-petclinic-discovery-server</module>
+                <module>spring-petclinic-api-gateway</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <configuration>
+                            <tagNameFormat>v@{project.version}</tagNameFormat>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <!--
             This profile file is used to configure and deploy applications to the Azure Spring Apps, only the following five applications are involved.

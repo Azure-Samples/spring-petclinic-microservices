@@ -20,7 +20,7 @@ jobs:
         distribution: 'temurin'
         cache: 'maven'
     - name: Build with Maven
-      run: ./mvnw clean package  
+      run: ./mvnw -P release clean package
     - uses: ncipollo/release-action@v1
       with:
-        artifacts: "target/*.jar"
+        artifacts: "spring-petclinic-**/target/*.jar"
