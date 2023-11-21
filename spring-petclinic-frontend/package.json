@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "spring-petclinic-frontend",
   "version": "3.0.1",
   "description": "Frontend for PetClinic project",
   "engines": {
