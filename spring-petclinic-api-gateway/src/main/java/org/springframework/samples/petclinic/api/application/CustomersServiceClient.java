@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.api.application;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.samples.petclinic.api.dto.OwnerDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -26,6 +27,7 @@ import reactor.core.publisher.Mono;
  */
 @Component
 @RequiredArgsConstructor
+@Profile("!development")
 public class CustomersServiceClient {
 
     private final WebClient.Builder webClientBuilder;

@@ -29,3 +29,6 @@ setup-env-variables-azure.sh
 
 # AZD
 .azure
+/frontend/npm-debug.log
+/frontend/public/
+/frontend/node_modules/

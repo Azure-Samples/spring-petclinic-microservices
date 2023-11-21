@@ -18,6 +18,7 @@ package org.springframework.samples.petclinic.api.boundary.web;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.ReactiveCircuitBreakerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.samples.petclinic.api.application.CustomersServiceClient;
 import org.springframework.samples.petclinic.api.application.VisitsServiceClient;
 import org.springframework.samples.petclinic.api.dto.OwnerDetails;
@@ -37,6 +38,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/gateway")
+@Profile("!development")
 public class ApiGatewayController {
 
     private final CustomersServiceClient customersServiceClient;

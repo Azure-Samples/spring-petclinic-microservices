@@ -26,6 +26,7 @@ import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -70,6 +71,7 @@ public class ApiGatewayApplication {
      * @see <a href="https://github.com/spring-projects/spring-boot/issues/9785">#9785</a>
      */
     @Bean
+    @Profile("!development")
     RouterFunction<?> routerFunction() {
         RouterFunction router = RouterFunctions.resources("/**", new ClassPathResource("static/"))
             .andRoute(RequestPredicates.GET("/"),

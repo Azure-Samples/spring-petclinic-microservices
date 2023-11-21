@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.api.application;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.samples.petclinic.api.dto.Visits;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,6 +31,7 @@ import static java.util.stream.Collectors.joining;
  */
 @Component
 @RequiredArgsConstructor
+@Profile("!development")
 public class VisitsServiceClient {
 
     // Could be changed for testing purpose

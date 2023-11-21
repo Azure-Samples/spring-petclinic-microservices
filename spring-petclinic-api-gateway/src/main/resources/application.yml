@@ -30,6 +30,21 @@ server:
 spring:
   config:
     activate:
+      on-profile: development
+  cloud:
+    gateway:
+      routes:
+        - id: frontend
+          uri: http://localhost:3000
+          predicates:
+            - Path=/**
+
+---
+server:
+  port: 8080
+spring:
+  config:
+    activate:
       on-profile: default
 
 ---
