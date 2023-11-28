@@ -9,14 +9,6 @@ spring:
     active: production
 
 ---
-server:
-  port: 8082
-spring:
-  config:
-    activate:
-      on-profile: development
-
----
 spring:
   config:
     activate:

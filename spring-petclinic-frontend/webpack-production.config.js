@@ -1,9 +1,8 @@
 const commonConfig = require('./webpack.config.js');
-const Dotenv = require("dotenv-webpack");
 const { merge} = require('webpack-merge');
-const WebpackShellPluginNext = require("webpack-shell-plugin-next");
 const fs = require('fs-extra');
 const path = require("path");
+const WebpackShellPluginNext = require("webpack-shell-plugin-next");
 
 module.exports = merge(commonConfig,
     {
@@ -15,10 +14,6 @@ module.exports = merge(commonConfig,
             publicPath: '/',
         },
         plugins: [
-            new Dotenv({
-                path: '.env.production',
-                safe: false,
-            }),
             new WebpackShellPluginNext({
                 onBeforeBuild: () => {
                     if (fs.exists(path.resolve(__dirname, 'public'))) {

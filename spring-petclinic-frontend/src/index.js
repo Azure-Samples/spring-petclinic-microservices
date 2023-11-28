@@ -8,7 +8,7 @@ import * as angular from 'angular';
 require('angular-ui-router/release/angular-ui-router.min');
 
 import './scripts/infrastructure/infrastructure';
-import './scripts/infrastructure/httpHandlingInterceptors';
+import './scripts/infrastructure/httpErrorHandlingInterceptor';
 
 import './scripts/owner-list/owner-list';
 import './scripts/owner-list/owner-list.component';
@@ -48,7 +48,7 @@ petClinicApp.config(['$stateProvider', '$urlRouterProvider', '$locationProvider'
 
     // safari turns to be lazy sending the Cache-Control header
     $httpProvider.defaults.headers.common["Cache-Control"] = 'no-cache';
-    $httpProvider.interceptors.push('httpHandlingInterceptors');
+    $httpProvider.interceptors.push('HttpErrorHandlingInterceptor');
 
     $locationProvider.hashPrefix('!');
 

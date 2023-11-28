@@ -19,13 +19,17 @@ Open a new terminal to start Discovery Server:
 ./mvnw spring-boot:run -pl spring-petclinic-discovery-server
 ```
 
-For Customers, Vets, Visits and Gateway services, it's required to enable the Spring profile `deployment`,
-Open new terminal in turn and execute the following commands:
+For Customers, Vets, and Visits services, open new terminal in turn and execute the following commands:
 
 ```shell
-./mvnw spring-boot:run -Dspring-boot.run.profiles=default,development -pl spring-petclinic-customers-service
-./mvnw spring-boot:run -Dspring-boot.run.profiles=default,development -pl spring-petclinic-vets-service
-./mvnw spring-boot:run -Dspring-boot.run.profiles=default,development -pl spring-petclinic-visits-service
+./mvnw spring-boot:run -pl spring-petclinic-customers-service
+./mvnw spring-boot:run -pl spring-petclinic-vets-service
+./mvnw spring-boot:run -pl spring-petclinic-visits-service
+```
+
+For Gateway service, it's required to enable the Spring profile `deployment` to enable the static resource proxy, open a new terminal and execute the following command:
+
+```shell
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=default,development -pl spring-petclinic-api-gateway
 ```
 

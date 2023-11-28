@@ -1,5 +1,4 @@
 const commonConfig = require('./webpack.config.js');
-const Dotenv = require("dotenv-webpack");
 const { merge} = require('webpack-merge');
 const CopyPlugin = require("copy-webpack-plugin");
 const WebpackShellPluginNext = require("webpack-shell-plugin-next");
@@ -13,20 +12,6 @@ module.exports = merge(commonConfig,
             static: false,
             port: 3000,
             https: false,
-            proxy: {
-                '/api/customer': {
-                    target: 'http://localhost:8081',
-                    pathRewrite: { '^/api/customer': '' },
-                },
-                '/api/vet': {
-                    target: 'http://localhost:8082',
-                    pathRewrite: { '^/api/vet': '' },
-                },
-                '/api/visit': {
-                    target: 'http://localhost:8083',
-                    pathRewrite: { '^/api/visit': '' },
-                },
-            },
         },
         output: {
             filename: '[name].[contenthash].js',
@@ -34,10 +19,6 @@ module.exports = merge(commonConfig,
             clean: true,
         },
         plugins: [
-            new Dotenv({
-                path: './.env.development',
-                safe: false,
-            }),
             new WebpackShellPluginNext({
                 onBuildStart:{
                     scripts: ['shx rm -rf "public/index.html"'],
