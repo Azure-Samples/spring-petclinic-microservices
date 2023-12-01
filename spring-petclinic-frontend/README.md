@@ -44,4 +44,3 @@ npm run start
 
 If everything goes well, you can access the PetClinic at given location:
 * Gateway - http://localhost:8080
-* Frontend - http://localhost:3000
