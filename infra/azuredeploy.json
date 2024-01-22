@@ -1835,7 +1835,7 @@
     {
       "type": "Microsoft.AppPlatform/Spring/gateways/routeConfigs",
       "apiVersion": "2023-03-01-preview",
-      "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), variables('customersServiceAppName'), 'routeConfig')]",
+      "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), 'default', variables('customersServiceAppName'))]",
       "dependsOn": [
         "[resourceId('Microsoft.AppPlatform/Spring/gateways', concat(variables('asaInstanceName'), 'default')]",
         "[resourceId('Microsoft.AppPlatform/Spring', variables('asaInstanceName'))]",
@@ -1854,7 +1854,7 @@
     {
       "type": "Microsoft.AppPlatform/Spring/gateways/routeConfigs",
       "apiVersion": "2023-03-01-preview",
-      "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), variables('vetsServiceAppName'), 'routeConfig')]",
+      "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), 'default', variables('vetsServiceAppName'))]",
       "dependsOn": [
         "[resourceId('Microsoft.AppPlatform/Spring/gateways', concat(variables('asaInstanceName'), 'default')]",
         "[resourceId('Microsoft.AppPlatform/Spring', variables('asaInstanceName'))]",
@@ -1873,7 +1873,7 @@
     {
       "type": "Microsoft.AppPlatform/Spring/gateways/routeConfigs",
       "apiVersion": "2023-03-01-preview",
-      "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), variables('visitsServiceAppName'), 'routeConfig')]",
+      "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), 'default', variables('visitsServiceAppName'))]",
       "dependsOn": [
         "[resourceId('Microsoft.AppPlatform/Spring/gateways', concat(variables('asaInstanceName'), 'default')]",
         "[resourceId('Microsoft.AppPlatform/Spring', variables('asaInstanceName'))]",
@@ -1892,7 +1892,7 @@
     {
       "type": "Microsoft.AppPlatform/Spring/gateways/routeConfigs",
       "apiVersion": "2023-03-01-preview",
-      "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), variables('frontendAppName'), 'routeConfig')]",
+      "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), 'default', variables('frontendAppName'))]",
       "dependsOn": [
         "[resourceId('Microsoft.AppPlatform/Spring/gateways', concat(variables('asaInstanceName'), 'default')]",
         "[resourceId('Microsoft.AppPlatform/Spring', variables('asaInstanceName'))]",
