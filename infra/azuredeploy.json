@@ -1837,7 +1837,7 @@
       "apiVersion": "2023-03-01-preview",
       "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), 'default', variables('customersServiceAppName'))]",
       "dependsOn": [
-        "[resourceId('Microsoft.AppPlatform/Spring/gateways', concat(variables('asaInstanceName'), 'default')]",
+        "[resourceId('Microsoft.AppPlatform/Spring/gateways', variables('asaInstanceName'), 'default')]",
         "[resourceId('Microsoft.AppPlatform/Spring', variables('asaInstanceName'))]",
         "[resourceId('Microsoft.AppPlatform/Spring/apps', variables('asaInstanceName'), variables('customersServiceAppName'))]"
       ],
@@ -1856,7 +1856,7 @@
       "apiVersion": "2023-03-01-preview",
       "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), 'default', variables('vetsServiceAppName'))]",
       "dependsOn": [
-        "[resourceId('Microsoft.AppPlatform/Spring/gateways', concat(variables('asaInstanceName'), 'default')]",
+        "[resourceId('Microsoft.AppPlatform/Spring/gateways', variables('asaInstanceName'), 'default')]",
         "[resourceId('Microsoft.AppPlatform/Spring', variables('asaInstanceName'))]",
         "[resourceId('Microsoft.AppPlatform/Spring/apps', variables('asaInstanceName'), variables('vetsServiceAppName'))]"
       ],
@@ -1875,7 +1875,7 @@
       "apiVersion": "2023-03-01-preview",
       "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), 'default', variables('visitsServiceAppName'))]",
       "dependsOn": [
-        "[resourceId('Microsoft.AppPlatform/Spring/gateways', concat(variables('asaInstanceName'), 'default')]",
+        "[resourceId('Microsoft.AppPlatform/Spring/gateways', variables('asaInstanceName'), 'default')]",
         "[resourceId('Microsoft.AppPlatform/Spring', variables('asaInstanceName'))]",
         "[resourceId('Microsoft.AppPlatform/Spring/apps', variables('asaInstanceName'), variables('visitsServiceAppName'))]"
       ],
@@ -1894,7 +1894,7 @@
       "apiVersion": "2023-03-01-preview",
       "name": "[format('{0}/{1}/{2}', variables('asaInstanceName'), 'default', variables('frontendAppName'))]",
       "dependsOn": [
-        "[resourceId('Microsoft.AppPlatform/Spring/gateways', concat(variables('asaInstanceName'), 'default')]",
+        "[resourceId('Microsoft.AppPlatform/Spring/gateways', variables('asaInstanceName'), 'default')]",
         "[resourceId('Microsoft.AppPlatform/Spring', variables('asaInstanceName'))]",
         "[resourceId('Microsoft.AppPlatform/Spring/apps', variables('asaInstanceName'), variables('frontendAppName'))]"
       ],
