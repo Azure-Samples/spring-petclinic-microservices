@@ -1797,7 +1797,7 @@
         "[resourceId('Microsoft.AppPlatform/Spring', variables('asaInstanceName'))]"
       ],
       "properties": {
-        "public": false,
+        "public": true,
         "features": {
           "applicationAccelerator": {
             "state": "Enabled"
@@ -1994,9 +1994,9 @@
       "type": "string",
       "value": "[reference(resourceId('Microsoft.AppPlatform/Spring/apps', variables('asaInstanceName'), variables('frontendAppName')), '2023-11-01-preview').url]"
     },
-    "Admin Server URL": {
+    "Application Live View URL": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.AppPlatform/Spring/apps', variables('asaInstanceName'), variables('adminServerAppName')), '2023-11-01-preview').url]"
+      "value": "[concat(reference(resourceId('Microsoft.AppPlatform/Spring/DevToolPortals', variables('asaInstanceName'), 'default'), '2023-11-01-preview').url, 'xxxx')]"
     }
   }
 }
