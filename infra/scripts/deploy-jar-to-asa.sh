@@ -18,6 +18,8 @@ if [[ -z "$ASA_SERVICE_NAME" ]]; then
   exit 1
 fi
 
+git clone https://github.com/Azure-Samples/spring-petclinic-microservices.git
+
 version="3.0.1"
 auth_header="no-auth"
 base_url="https://github.com/Azure-Samples/spring-petclinic-microservices/releases/download"
