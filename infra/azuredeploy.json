@@ -1992,7 +1992,7 @@
   "outputs": {
     "API Gateway URL": {
       "type": "string",
-      "value": "['https://', reference(resourceId('Microsoft.AppPlatform/Spring/gateways', variables('asaInstanceName'), 'default'), '2023-11-01-preview').url]"
+      "value": "[concat('https://', reference(resourceId('Microsoft.AppPlatform/Spring/gateways', variables('asaInstanceName'), 'default'), '2023-11-01-preview').url)]"
     },
     "Application Live View URL": {
       "type": "string",
