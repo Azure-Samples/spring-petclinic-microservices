@@ -1821,7 +1821,7 @@
         "capacity": 2
       },
       "properties": {
-        "public": false,
+        "public": true,
         "httpsOnly": false,
         "resourceRequests": {
           "cpu": "1",
@@ -1992,11 +1992,11 @@
   "outputs": {
     "API Gateway URL": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.AppPlatform/Spring/apps', variables('asaInstanceName'), variables('frontendAppName')), '2023-11-01-preview').url]"
+      "value": "[reference(resourceId('Microsoft.AppPlatform/Spring/gateways', variables('asaInstanceName'), 'default'), '2023-11-01-preview').url]"
     },
     "Application Live View URL": {
       "type": "string",
-      "value": "[concat(reference(resourceId('Microsoft.AppPlatform/Spring/DevToolPortals', variables('asaInstanceName'), 'default'), '2023-11-01-preview').url, 'xxxx')]"
+      "value": "[concat(reference(resourceId('Microsoft.AppPlatform/Spring/DevToolPortals', variables('asaInstanceName'), 'default'), '2023-11-01-preview').url, '/app-live-view')]"
     }
   }
 }

@@ -83,7 +83,7 @@ while [ $jobs_count -gt 0 ]; do
   fi
 done
 
-echo "Deployed to Azure Spring Cloud successfully."
+echo "Deployed to Azure Spring Apps successfully."
 
 # Delete uami generated before exiting the script
 az identity delete --ids ${AZ_SCRIPTS_USER_ASSIGNED_IDENTITY}
