@@ -17,7 +17,7 @@ if (!$asaServiceName) {
     throw "The Azure Spring Apps service name is not successfully retrieved, please retry another deployment."
 }
 
-$apiUrl = 'https://management.azure.com/subscriptions/' + $subscriptionId + '/resourceGroups/' + $resourceGroup + '/providers/Microsoft.AppPlatform/Spring/' + $asaServiceName + '/buildServices/default/builders/default?api-version=2023-05-01-preview'
+$apiUrl = 'https://management.azure.com/subscriptions/' + $subscriptionId + '/resourceGroups/' + $resourceGroup + '/providers/Microsoft.AppPlatform/Spring/' + $asaServiceName + '/buildServices/default/builders/default?api-version=2023-11-01-preview'
 $state = $null
 $timeout = New-TimeSpan -Seconds 900
 Write-Output "Check the status of Build Service Builder provisioning state within $timeout ..."
