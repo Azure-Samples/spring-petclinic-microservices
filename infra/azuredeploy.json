@@ -1990,7 +1990,7 @@
     }
   ],
   "outputs": {
-    "API Gateway URL": {
+    "Spring Cloud Gateway URL": {
       "type": "string",
       "value": "[concat('https://', reference(resourceId('Microsoft.AppPlatform/Spring/gateways', variables('asaInstanceName'), 'default'), '2023-11-01-preview').url)]"
     },
