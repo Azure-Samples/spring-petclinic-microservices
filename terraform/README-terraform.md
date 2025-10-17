@@ -176,7 +176,7 @@ Deploy microservice applications to Azure.
 
 ```bash
     cd ../
-    az spring-cloud app deployment create -n ${API_GATEWAY} --app ${API_GATEWAY} -s ${SPRING_CLOUD_SERVICE} \
+    az spring app deployment create -n ${API_GATEWAY} --app ${API_GATEWAY} -s ${SPRING_CLOUD_SERVICE} \
          -g ${RESOURCE_GROUP} --jar-path ${API_GATEWAY_JAR}  --skip-clone-settings
 
     az spring-cloud app set-deployment -d ${API_GATEWAY} -n ${API_GATEWAY} -s ${SPRING_CLOUD_SERVICE} -g ${RESOURCE_GROUP}
